@@ -106,7 +106,7 @@ export default function Game() {
     <div className="page" style={{ background: 'var(--white)', minHeight: '100dvh' }}>
       {/* Header */}
       <header className="site-header">
-        <span className="wordmark">Coveted</span>
+        <span className="wordmark">Luxit</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <span className="phase-badge">
             <span className="phase-dot" />
@@ -367,7 +367,7 @@ function PickingPhase({
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(1.2rem, 4vw, 2rem)',
-            fontStyle: 'italic',
+            
             letterSpacing: '0.02em',
           }}
         >
@@ -462,7 +462,7 @@ function VotingPhase({
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: '1.4rem',
-            fontStyle: 'italic',
+            
           }}
         >
           "{clue}"
@@ -554,7 +554,7 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: '1.6rem',
-            fontStyle: 'italic',
+            
             marginBottom: 20,
           }}
         >

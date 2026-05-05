@@ -91,45 +91,6 @@ export default function Card({
             </div>
           )}
 
-          {/* Category tag */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 8,
-              left: 8,
-              background: 'rgba(255,255,255,0.92)',
-              padding: '2px 7px',
-              fontSize: '0.6rem',
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              fontWeight: 500,
-              color: 'var(--dark-grey)',
-              borderRadius: 20,
-            }}
-          >
-            {card.category}
-          </div>
-
-          {/* Buyer badge */}
-          {isBuyer && (
-            <div
-              style={{
-                position: 'absolute',
-                top: 8,
-                right: 8,
-                background: 'var(--black)',
-                color: 'var(--white)',
-                padding: '2px 7px',
-                fontSize: '0.6rem',
-                letterSpacing: '0.08em',
-                textTransform: 'uppercase',
-                fontWeight: 500,
-                borderRadius: 20,
-              }}
-            >
-              Buyer
-            </div>
-          )}
         </div>
 
         {/* Info */}

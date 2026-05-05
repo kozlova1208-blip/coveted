@@ -71,7 +71,7 @@ export default function Lobby() {
   return (
     <div className="page" style={{ background: 'var(--white)' }}>
       <header className="site-header">
-        <span className="wordmark">Coveted</span>
+        <span className="wordmark">Luxit</span>
         <span className="phase-badge">
           <span className="phase-dot" />
           Lobby
@@ -98,7 +98,7 @@ export default function Lobby() {
                 fontFamily: 'var(--font-serif)',
                 fontSize: 'clamp(2rem, 10vw, 3.5rem)',
                 letterSpacing: '0.2em',
-                fontStyle: 'italic',
+                
                 color: 'var(--black)',
               }}
             >

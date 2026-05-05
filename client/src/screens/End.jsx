@@ -56,7 +56,7 @@ export default function End() {
     <div className="page" style={{ background: 'var(--white)' }}>
       {/* Header */}
       <header className="site-header">
-        <span className="wordmark">Coveted</span>
+        <span className="wordmark">Luxit</span>
         <span className="phase-badge">Final Scores</span>
       </header>
 
@@ -86,7 +86,7 @@ export default function End() {
               justifyContent: 'center',
               fontFamily: 'var(--font-serif)',
               fontSize: '1.8rem',
-              fontStyle: 'italic',
+              
               margin: '0 auto 14px',
             }}
           >
@@ -96,7 +96,7 @@ export default function End() {
             style={{
               fontFamily: 'var(--font-serif)',
               fontSize: '2.2rem',
-              fontStyle: 'italic',
+              
               marginBottom: 4,
             }}
           >
@@ -215,7 +215,7 @@ export default function End() {
               style={{
                 fontFamily: 'var(--font-serif)',
                 fontSize: '1.4rem',
-                fontStyle: 'italic',
+                
                 marginBottom: 8,
               }}
             >
@@ -259,7 +259,7 @@ export default function End() {
                     style={{
                       fontFamily: 'var(--font-serif)',
                       fontSize: '0.95rem',
-                      fontStyle: 'italic',
+                      
                       flex: 1,
                     }}
                   >

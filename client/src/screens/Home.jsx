@@ -77,7 +77,7 @@ export default function Home() {
           style={{
             fontFamily: 'var(--font-serif)',
             fontSize: 'clamp(2.8rem, 8vw, 5rem)',
-            fontStyle: 'italic',
+            
             fontWeight: 400,
             letterSpacing: '-0.01em',
             lineHeight: 1,
@@ -85,7 +85,7 @@ export default function Home() {
             marginBottom: 20,
           }}
         >
-          Coveted
+          Luxit
         </h1>
         <p
           style={{
