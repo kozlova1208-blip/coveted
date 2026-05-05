@@ -187,7 +187,7 @@ export default function Game() {
           {/* ── CLUE PHASE ── */}
           {room.status === 'clue' && (
             <CluePhase
-              isBuyer={isBuyer}
+             
               buyer={buyer}
               hand={room.hand}
               clueInput={clueInput}
@@ -202,7 +202,7 @@ export default function Game() {
           {/* ── PICKING PHASE ── */}
           {room.status === 'picking' && (
             <PickingPhase
-              isBuyer={isBuyer}
+             
               clue={room.clue}
               buyer={buyer}
               hand={room.hand}
@@ -220,7 +220,7 @@ export default function Game() {
           {/* ── VOTING PHASE ── */}
           {room.status === 'voting' && (
             <VotingPhase
-              isBuyer={isBuyer}
+             
               clue={room.clue}
               buyer={buyer}
               tableCards={room.tableCards ?? []}
@@ -270,7 +270,7 @@ function CluePhase({ isBuyer, buyer, hand, clueInput, setClueInput, submitted, o
 
           {myCard && (
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 28 }}>
-              <Card card={myCard} showDetails />
+              <Card card={myCard} />
             </div>
           )}
 
@@ -295,7 +295,7 @@ function CluePhase({ isBuyer, buyer, hand, clueInput, setClueInput, submitted, o
               type="submit"
               className="btn"
               style={{ width: '100%' }}
-              disabled={!clueInput.trim() || submitted}
+             disabled={!clueInput.trim() || submitted}
             >
               {submitted ? 'Clue Submitted ✓' : 'Submit Clue'}
             </button>
@@ -416,7 +416,7 @@ function PickingPhase({
                   card={card}
                   selected={selectedCard?.id === card.id}
                   onClick={(c) => setSelectedCard(c)}
-                  showDetails
+                 
                 />
               </div>
             ))}
@@ -519,7 +519,7 @@ function VotingPhase({
                   card={t.card}
                   selected={voteCard?.cardId === t.cardId}
                   onClick={() => setVoteCard(t)}
-                  showDetails
+                 
                 />
               </div>
             ))}
@@ -564,8 +564,8 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <Card
               card={buyerTableEntry.card}
-              isBuyer
-              showDetails
+             
+             
               votedBy={buyerTableEntry.votedBy}
             />
           </div>
@@ -668,9 +668,9 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
           <Card
             key={t.cardId}
             card={t.card}
-            isBuyer={t.isBuyer}
+            
             votedBy={t.votedBy}
-            showDetails
+           
             compact={room.tableCards.length > 3}
           />
         ))}
