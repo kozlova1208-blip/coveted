@@ -1,0 +1,11 @@
+{
+  "name": "coveted-scripts",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "scrape": "node scrape-nap.js"
+  },
+  "dependencies": {
+    "playwright": "^1.43.0"
+  }
+}
