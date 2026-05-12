@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
 import Card from '../components/Card';
 import Timer from '../components/Timer';
+import { avatarChar } from '../utils/avatar';
 
 const PHASE_LABELS = {
   clue:     'Giving a Clue',
@@ -287,7 +288,7 @@ function BuyerChip({ buyer, color }) {
           fontSize: '0.7rem', fontWeight: 700,
         }}
       >
-        {buyer.name.charAt(0).toUpperCase()}
+        {avatarChar(buyer.name)}
       </div>
       <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>{buyer.name}</span>
       <span style={{ fontSize: '0.65rem', color: 'var(--mid-grey)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -510,7 +511,7 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
                   marginRight: 12, flexShrink: 0,
                 }}
               >
-                {p.name.charAt(0).toUpperCase()}
+                {avatarChar(p.name)}
               </div>
               <span style={{ flex: 1, fontSize: '0.9rem' }}>
                 {p.name}

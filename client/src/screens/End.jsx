@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
+import { avatarChar } from '../utils/avatar';
 
 const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#9B5DE5'];
 
@@ -123,7 +124,7 @@ export default function End() {
               boxShadow: `0 0 0 4px ${winnerColor}44`,
             }}
           >
-            {winner?.name.charAt(0).toUpperCase()}
+            {avatarChar(winner?.name ?? '')}
           </div>
           <h1
             style={{
@@ -194,7 +195,7 @@ export default function End() {
                     marginRight: 12, flexShrink: 0,
                   }}
                 >
-                  {p.name.charAt(0).toUpperCase()}
+                  {avatarChar(p.name)}
                 </div>
                 <span style={{ flex: 1, fontSize: '0.92rem' }}>
                   {p.name}

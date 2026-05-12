@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
+import { avatarChar } from '../utils/avatar';
 
 const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#9B5DE5'];
 
@@ -218,7 +219,7 @@ export default function Lobby() {
                     flexShrink: 0,
                   }}
                 >
-                  {player.name.charAt(0).toUpperCase()}
+                  {avatarChar(player.name)}
                 </div>
                 <div style={{ flex: 1 }}>
                   <span style={{ fontSize: '0.92rem' }}>{player.name}</span>
