@@ -243,10 +243,10 @@ export default function Home() {
         <p className="label" style={{ marginBottom: 16 }}>How to play</p>
         <ol style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
           {[
-            'One player is the Buyer. They see a luxury item and write a clue — a word, vibe, or phrase.',
-            'Everyone else picks a card from their hand that best matches the clue.',
-            'Cards are revealed anonymously. Vote for the Buyer’s card.',
-            'Score points for correct guesses — and for fooling others with your decoys.',
+            ‘One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. The trick? Don\’t be too obvious — if everyone guesses your card, you score nothing. But don\’t be too cryptic either — if nobody guesses it, you score nothing too. Aim for that sweet spot.’,
+            ‘Everyone else picks a card from their hand that best matches the clue. Choose wisely — you want your card to be close enough to the clue that other players mistake it for the Buyer\’s, and vote for yours instead.’,
+            ‘Cards are revealed anonymously. Vote for the Buyer\’s card.’,
+            ‘Score points for correct guesses — and for fooling others with your decoys.’,
           ].map((step, i) => (
             <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
               <span
