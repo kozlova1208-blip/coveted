@@ -389,19 +389,17 @@ function PickingPhase({ isBuyer, clue, buyer, buyerColor, hand, selectedCard, se
       ) : (
         <>
           <h2 style={{ fontSize: '1.2rem', marginBottom: 6 }}>Pick your card</h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 20 }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 16 }}>
             Choose the one that best matches the clue.
           </p>
-          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollSnapType: 'x mandatory' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
             {hand?.map((card) => (
-              <div key={card.id} style={{ scrollSnapAlign: 'start' }}>
-                <Card card={card} selected={selectedCard?.id === card.id} onClick={(c) => setSelectedCard(c)} />
-              </div>
+              <Card key={card.id} card={card} fill selected={selectedCard?.id === card.id} onClick={(c) => setSelectedCard(c)} />
             ))}
           </div>
           <button
             className="btn btn-teal"
-            style={{ width: '100%', marginTop: 16 }}
+            style={{ width: '100%' }}
             disabled={!selectedCard}
             onClick={onPlay}
           >
@@ -427,8 +425,8 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
             Everyone is voting… you sit this one out.
           </p>
           <ProgressDots done={votesCount} total={totalVoters} />
-          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, marginTop: 20, justifyContent: tableCards.length <= 3 ? 'center' : 'flex-start' }}>
-            {tableCards.map((t) => <Card key={t.cardId} card={t.card} compact />)}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 20 }}>
+            {tableCards.map((t) => <Card key={t.cardId} card={t.card} fill />)}
           </div>
         </div>
       ) : submitted ? (
@@ -439,14 +437,12 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
       ) : (
         <>
           <h2 style={{ fontSize: '1.2rem', marginBottom: 6 }}>Which is the Buyer's card?</h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 20 }}>
+          <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 16 }}>
             Tap a card to select, then confirm your vote.
           </p>
-          <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16, scrollSnapType: 'x mandatory' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 16 }}>
             {tableCards.map((t) => (
-              <div key={t.cardId} style={{ scrollSnapAlign: 'start' }}>
-                <Card card={t.card} selected={voteCard?.cardId === t.cardId} onClick={() => setVoteCard(t)} />
-              </div>
+              <Card key={t.cardId} card={t.card} fill selected={voteCard?.cardId === t.cardId} onClick={() => setVoteCard(t)} />
             ))}
           </div>
           <button
@@ -542,9 +538,9 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
 
       {/* All cards */}
       <p className="label" style={{ marginBottom: 14 }}>All Cards This Round</p>
-      <div style={{ display: 'flex', gap: 12, overflowX: 'auto', paddingBottom: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         {room.tableCards?.map((t) => (
-          <Card key={t.cardId} card={t.card} votedBy={t.votedBy} compact={room.tableCards.length > 3} />
+          <Card key={t.cardId} card={t.card} fill votedBy={t.votedBy} />
         ))}
       </div>
 

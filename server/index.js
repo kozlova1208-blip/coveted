@@ -36,12 +36,23 @@ function shuffle(arr) {
   return a;
 }
 
-function dealCards(room, playerId, count) {
+function dealCards(room, playerId, count, roundUsed = new Set()) {
   if (!room.usedCardsPerPlayer[playerId]) room.usedCardsPerPlayer[playerId] = new Set();
-  const used = room.usedCardsPerPlayer[playerId];
-  const available = DECK.filter((c) => !used.has(c.id));
+  const personalUsed = room.usedCardsPerPlayer[playerId];
+
+  // Prefer cards not seen by this player AND not dealt to anyone else this round
+  let available = DECK.filter((c) => !personalUsed.has(c.id) && !roundUsed.has(c.id));
+
+  // If deck is too depleted, relax the personal-history constraint but keep round-uniqueness
+  if (available.length < count) {
+    available = DECK.filter((c) => !roundUsed.has(c.id));
+  }
+
   const dealt = shuffle(available).slice(0, count);
-  dealt.forEach((c) => used.add(c.id));
+  dealt.forEach((c) => {
+    personalUsed.add(c.id);
+    roundUsed.add(c.id);
+  });
   return dealt;
 }
 
@@ -140,13 +151,16 @@ function startRound(room) {
   room.lastScoreDeltas = {};
   room.hands = {};
 
-  const [buyerCard] = dealCards(room, room.buyerId, 1);
+  // Share one roundUsed set so no card appears in two players' hands
+  const roundUsed = new Set();
+
+  const [buyerCard] = dealCards(room, room.buyerId, 1, roundUsed);
   room.buyerCard = buyerCard;
   room.hands[room.buyerId] = [buyerCard];
 
   room.players.forEach((p) => {
     if (p.id !== room.buyerId) {
-      room.hands[p.id] = dealCards(room, p.id, 4);
+      room.hands[p.id] = dealCards(room, p.id, 4, roundUsed);
     }
   });
 

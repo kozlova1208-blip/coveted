@@ -6,11 +6,12 @@ export default function Card({
   voted = false,
   onClick,
   compact = false,
+  fill = false,   // when true the card stretches to fill its container width
   votedBy = [],
 }) {
   const [imgError, setImgError] = useState(false);
 
-  const w = compact ? 130 : 180;
+  const w = fill ? '100%' : compact ? 130 : 180;
   const h = compact ? 170 : 240;
 
   return (
