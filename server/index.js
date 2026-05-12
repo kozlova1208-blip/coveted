@@ -152,7 +152,7 @@ function startRound(room) {
 
   room.status = 'clue';
   room.phaseStartTime = Date.now();
-  room.phaseDuration = 45;
+  room.phaseDuration = 120;
 }
 
 function beginVoting(code, room) {
@@ -220,9 +220,9 @@ function autoClue(code) {
   room.clue = '…';
   room.status = 'picking';
   room.phaseStartTime = Date.now();
-  room.phaseDuration = 45;
+  room.phaseDuration = 120;
   clearTimeout(room.timer);
-  room.timer = setTimeout(() => autoPick(code), 45_000);
+  room.timer = setTimeout(() => autoPick(code), 120_000);
   broadcastRoom(room);
 }
 
@@ -328,7 +328,7 @@ io.on('connection', (socket) => {
 
     startRound(room);
     clearTimeout(room.timer);
-    room.timer = setTimeout(() => autoClue(code), 45_000);
+    room.timer = setTimeout(() => autoClue(code), 120_000);
     broadcastRoom(room);
   });
 
@@ -339,10 +339,10 @@ io.on('connection', (socket) => {
     room.clue = (clue ?? '').substring(0, 60);
     room.status = 'picking';
     room.phaseStartTime = Date.now();
-    room.phaseDuration = 45;
+    room.phaseDuration = 120;
 
     clearTimeout(room.timer);
-    room.timer = setTimeout(() => autoPick(code), 45_000);
+    room.timer = setTimeout(() => autoPick(code), 120_000);
     broadcastRoom(room);
   });
 
@@ -397,7 +397,7 @@ io.on('connection', (socket) => {
     } else {
       startRound(room);
       clearTimeout(room.timer);
-      room.timer = setTimeout(() => autoClue(code), 45_000);
+      room.timer = setTimeout(() => autoClue(code), 120_000);
       broadcastRoom(room);
     }
   });
