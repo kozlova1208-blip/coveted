@@ -119,10 +119,13 @@ export default function Game() {
         </div>
       </header>
 
-      {/* Scoreboard strip */}
+      {/* Scoreboard strip — sorted high→low */}
       <div style={{ overflowX: 'auto', borderBottom: '2px solid var(--border)', background: 'var(--white)' }}>
         <div style={{ display: 'flex', minWidth: 'max-content' }}>
-          {room.players.map((p, i) => (
+          {[...room.players].sort((a, b) => (room.scores[b.id] ?? 0) - (room.scores[a.id] ?? 0)).map((p) => {
+            const origIdx = room.players.findIndex((pl) => pl.id === p.id);
+            const dotColor = AVATAR_COLORS[origIdx % AVATAR_COLORS.length];
+            return (
             <div
               key={p.id}
               style={{
@@ -139,9 +142,9 @@ export default function Game() {
                   width: 6,
                   height: 6,
                   borderRadius: '50%',
-                  background: AVATAR_COLORS[i % AVATAR_COLORS.length],
+                  background: dotColor,
                   margin: '0 auto 4px',
-                  boxShadow: p.id === room.buyerId ? `0 0 0 2px ${AVATAR_COLORS[i % AVATAR_COLORS.length]}55` : 'none',
+                  boxShadow: p.id === room.buyerId ? `0 0 0 2px ${dotColor}55` : 'none',
                 }}
               />
               <p
@@ -164,7 +167,7 @@ export default function Game() {
                 {room.scores[p.id] ?? 0}
               </p>
             </div>
-          ))}
+          );})}
         </div>
       </div>
 
@@ -479,62 +482,57 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
         )}
       </div>
 
-      {/* Score deltas */}
-      <div style={{ border: '2px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: 28 }}>
-        <div style={{ padding: '10px 16px', borderBottom: '1px solid var(--border)', background: 'var(--light)' }}>
-          <p className="label" style={{ margin: 0 }}>Round Scores</p>
-        </div>
-        {room.players.map((p, i) => {
-          const delta = room.scoreDeltas?.[p.id] ?? 0;
-          return (
-            <div
-              key={p.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '12px 16px',
-                borderBottom: '1px solid var(--border)',
-                background: p.id === myId ? 'var(--light)' : 'var(--white)',
-              }}
-            >
-              <div
-                style={{
-                  width: 30, height: 30, borderRadius: '50%',
-                  background: AVATAR_COLORS[i % AVATAR_COLORS.length],
-                  color: '#fff',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.72rem', fontWeight: 700,
-                  marginRight: 12, flexShrink: 0,
-                }}
-              >
-                {avatarChar(p.name)}
-              </div>
-              <span style={{ flex: 1, fontSize: '0.9rem' }}>
-                {p.name}
-                {p.id === room.buyerId && (
-                  <span style={{ marginLeft: 6, fontSize: '0.62rem', color: 'var(--mid-grey)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                    Buyer
-                  </span>
-                )}
-              </span>
-              <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', marginRight: 14, color: 'var(--mid-grey)' }}>
-                {room.scores[p.id] ?? 0}
-              </span>
-              <span
-                style={{
-                  fontWeight: 700,
-                  fontSize: '0.9rem',
-                  color: delta > 0 ? '#06D6A0' : delta < 0 ? 'var(--coral)' : 'var(--mid-grey)',
-                  minWidth: 34,
-                  textAlign: 'right',
-                }}
-              >
-                {delta > 0 ? `+${delta}` : delta === 0 ? '–' : delta}
-              </span>
-            </div>
-          );
-        })}
-      </div>
+      {/* Leaderboard — sorted horizontal bars with round delta */}
+      {(() => {
+        const sorted = [...room.players].sort(
+          (a, b) => (room.scores[b.id] ?? 0) - (room.scores[a.id] ?? 0)
+        );
+        const maxScore = Math.max(...sorted.map((p) => room.scores[p.id] ?? 0), 1);
+        return (
+          <div style={{ marginBottom: 28 }}>
+            <p className="label" style={{ marginBottom: 14 }}>Leaderboard</p>
+            {sorted.map((p, i) => {
+              const originalIndex = room.players.findIndex((pl) => pl.id === p.id);
+              const color = AVATAR_COLORS[originalIndex % AVATAR_COLORS.length];
+              const score = room.scores[p.id] ?? 0;
+              const delta = room.scoreDeltas?.[p.id] ?? 0;
+              const pct = Math.max((score / maxScore) * 100, 4);
+              return (
+                <div key={p.id} style={{ marginBottom: 10 }}>
+                  {/* Name + rank + delta */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                    <span style={{ fontSize: '0.62rem', color: 'var(--mid-grey)', width: 14, flexShrink: 0 }}>
+                      {i + 1}
+                    </span>
+                    <span style={{ fontSize: '0.82rem', fontWeight: p.id === myId ? 700 : 400, flex: 1 }}>
+                      {p.name}
+                      {p.id === myId && <span style={{ marginLeft: 5, fontSize: '0.62rem', color: 'var(--mid-grey)' }}>(you)</span>}
+                    </span>
+                    {delta !== 0 && (
+                      <span style={{
+                        fontSize: '0.72rem', fontWeight: 700,
+                        color: delta > 0 ? '#06D6A0' : 'var(--coral)',
+                      }}>
+                        {delta > 0 ? `+${delta}` : delta}
+                      </span>
+                    )}
+                  </div>
+                  {/* Bar */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ width: 14, flexShrink: 0 }} />
+                    <div style={{ flex: 1, background: 'var(--light)', borderRadius: 100, height: 26, overflow: 'hidden' }}>
+                      <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 100, transition: 'width 0.6s ease' }} />
+                    </div>
+                    <span style={{ fontFamily: 'var(--font-serif)', fontSize: '1.05rem', fontWeight: i === 0 ? 700 : 400, minWidth: 26, textAlign: 'right', flexShrink: 0 }}>
+                      {score}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* All cards */}
       <p className="label" style={{ marginBottom: 14 }}>All Cards This Round</p>
