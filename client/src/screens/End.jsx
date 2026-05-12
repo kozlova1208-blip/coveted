@@ -145,77 +145,66 @@ export default function End() {
 
       <div className="container" style={{ padding: '32px 20px 60px' }}>
 
-        {/* Leaderboard */}
-        <div
-          style={{
-            border: '2px solid var(--border)',
-            borderRadius: 'var(--radius)',
-            overflow: 'hidden',
-            marginBottom: 28,
-            background: 'var(--white)',
-          }}
-        >
-          <div style={{ padding: '10px 16px', background: 'var(--light)', borderBottom: '1px solid var(--border)' }}>
-            <p className="label" style={{ margin: 0 }}>Leaderboard</p>
-          </div>
-          {sorted.map((p, i) => {
-            const originalIndex = room.players.findIndex((pl) => pl.id === p.id);
-            const avatarColor = AVATAR_COLORS[originalIndex % AVATAR_COLORS.length];
-            return (
-              <div
-                key={p.id}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '14px 16px',
-                  borderBottom: i < sorted.length - 1 ? '1px solid var(--border)' : 'none',
-                  background: p.id === myId ? 'var(--light)' : 'var(--white)',
-                }}
-              >
-                <span
-                  style={{
-                    width: 26,
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1rem',
-                    color: i === 0 ? 'var(--black)' : 'var(--mid-grey)',
-                    fontWeight: i === 0 ? 700 : 400,
-                    marginRight: 12,
-                    flexShrink: 0,
-                  }}
-                >
-                  {i + 1}
-                </span>
-                <div
-                  style={{
-                    width: 32, height: 32, borderRadius: '50%',
-                    background: avatarColor,
-                    color: '#fff',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: '0.75rem', fontWeight: 700,
-                    marginRight: 12, flexShrink: 0,
-                  }}
-                >
-                  {avatarChar(p.name)}
+        {/* Leaderboard — horizontal bar chart */}
+        <div style={{ marginBottom: 28 }}>
+          <p className="label" style={{ marginBottom: 16 }}>Leaderboard</p>
+          {(() => {
+            const maxScore = Math.max(...sorted.map((p) => room.scores[p.id] ?? 0), 1);
+            return sorted.map((p, i) => {
+              const originalIndex = room.players.findIndex((pl) => pl.id === p.id);
+              const avatarColor = AVATAR_COLORS[originalIndex % AVATAR_COLORS.length];
+              const score = room.scores[p.id] ?? 0;
+              const pct = Math.max((score / maxScore) * 100, 4);
+              return (
+                <div key={p.id} style={{ marginBottom: 10 }}>
+                  {/* Name row */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
+                    <span style={{ fontSize: '0.65rem', color: 'var(--mid-grey)', width: 14, flexShrink: 0 }}>
+                      {i + 1}
+                    </span>
+                    <span style={{ fontSize: '0.82rem', fontWeight: p.id === myId ? 700 : 400 }}>
+                      {p.name}
+                    </span>
+                    {p.id === myId && (
+                      <span style={{ fontSize: '0.62rem', color: 'var(--mid-grey)' }}>(you)</span>
+                    )}
+                  </div>
+                  {/* Bar row */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ fontSize: '0.65rem', width: 14, flexShrink: 0 }} />
+                    <div style={{ flex: 1, background: 'var(--light)', borderRadius: 100, height: 28, overflow: 'hidden' }}>
+                      <div
+                        style={{
+                          width: `${pct}%`,
+                          height: '100%',
+                          background: avatarColor,
+                          borderRadius: 100,
+                          transition: 'width 0.6s ease',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'flex-end',
+                          paddingRight: 10,
+                        }}
+                      />
+                    </div>
+                    <span
+                      style={{
+                        fontFamily: 'var(--font-serif)',
+                        fontSize: '1.1rem',
+                        fontWeight: i === 0 ? 700 : 400,
+                        color: i === 0 ? 'var(--black)' : 'var(--dark-grey)',
+                        minWidth: 28,
+                        textAlign: 'right',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {score}
+                    </span>
+                  </div>
                 </div>
-                <span style={{ flex: 1, fontSize: '0.92rem' }}>
-                  {p.name}
-                  {p.id === myId && (
-                    <span style={{ marginLeft: 6, fontSize: '0.65rem', color: 'var(--mid-grey)' }}>(you)</span>
-                  )}
-                </span>
-                <span
-                  style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.3rem',
-                    color: i === 0 ? 'var(--black)' : 'var(--dark-grey)',
-                    fontWeight: i === 0 ? 700 : 400,
-                  }}
-                >
-                  {room.scores[p.id] ?? 0}
-                </span>
-              </div>
-            );
-          })}
+              );
+            });
+          })()}
         </div>
 
         {/* Best clue */}
