@@ -2,6 +2,19 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
 
+const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#9B5DE5'];
+
+function Flower({ x, y, size = 32, color = '#FF6B6B', centerColor = '#FFD166', rotate = 0, opacity = 0.8 }) {
+  return (
+    <g transform={`translate(${x},${y}) rotate(${rotate})`} opacity={opacity}>
+      {[0, 60, 120, 180, 240, 300].map((a) => (
+        <ellipse key={a} cx={0} cy={-size * 0.52} rx={size * 0.21} ry={size * 0.38} fill={color} transform={`rotate(${a})`} />
+      ))}
+      <circle cx={0} cy={0} r={size * 0.22} fill={centerColor} />
+    </g>
+  );
+}
+
 export default function End() {
   const { code } = useParams();
   const navigate = useNavigate();
@@ -12,7 +25,6 @@ export default function End() {
 
   useEffect(() => {
     if (!socket || !connected) return;
-
     socket.on('room-update', (r) => setRoom(r));
 
     if (!room) {
@@ -43,8 +55,9 @@ export default function End() {
     (a, b) => (room.scores[b.id] ?? 0) - (room.scores[a.id] ?? 0)
   );
   const winner = sorted[0];
+  const winnerOriginalIndex = room.players.findIndex((p) => p.id === winner?.id);
+  const winnerColor = AVATAR_COLORS[winnerOriginalIndex % AVATAR_COLORS.length];
 
-  // Best clue = longest clue (as a stand-in until we track ratings)
   const bestClueEntry = room.roundHistory?.reduce((best, entry) => {
     if (!best) return entry;
     return (entry.clue?.length ?? 0) > (best.clue?.length ?? 0) ? entry : best;
@@ -53,41 +66,61 @@ export default function End() {
   const myId = socket?.id;
 
   return (
-    <div className="page" style={{ background: 'var(--white)' }}>
+    <div className="page" style={{ background: 'var(--cream)' }}>
+
       {/* Header */}
-      <header className="site-header">
+      <header className="site-header" style={{ background: 'var(--cream)' }}>
         <span className="wordmark">Luxit</span>
         <span className="phase-badge">Final Scores</span>
       </header>
 
-      <div className="container" style={{ padding: '40px 20px 60px' }}>
-        {/* Winner */}
-        <div style={{ textAlign: 'center', marginBottom: 40 }}>
+      {/* Winner hero */}
+      <div
+        style={{
+          position: 'relative',
+          overflow: 'hidden',
+          textAlign: 'center',
+          padding: '40px 20px 36px',
+          background: 'var(--light)',
+          borderBottom: '2px solid var(--border)',
+        }}
+      >
+        {/* flower decorations */}
+        <div className="flowers-bg">
+          <svg width="100%" height="100%" viewBox="0 0 420 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+            <Flower x={18}  y={25}  size={44} color="#FF6B6B" centerColor="#FFD166" rotate={-15} />
+            <Flower x={402} y={20}  size={40} color="#9B5DE5" centerColor="#FFD166" rotate={18} />
+            <Flower x={55}  y={145} size={24} color="#00C9C8" centerColor="#FF99C8" rotate={10}  opacity={0.6} />
+            <Flower x={370} y={140} size={24} color="#06D6A0" centerColor="#FFD166" rotate={-10} opacity={0.6} />
+          </svg>
+        </div>
+
+        <div style={{ position: 'relative', zIndex: 1 }}>
           <p
             style={{
-              fontSize: '0.65rem',
-              letterSpacing: '0.2em',
+              fontSize: '0.62rem',
+              letterSpacing: '0.22em',
               textTransform: 'uppercase',
               color: 'var(--mid-grey)',
-              marginBottom: 12,
+              marginBottom: 14,
             }}
           >
             Winner
           </p>
           <div
             style={{
-              width: 64,
-              height: 64,
+              width: 68,
+              height: 68,
               borderRadius: '50%',
-              background: 'var(--black)',
-              color: 'var(--white)',
+              background: winnerColor,
+              color: '#fff',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.8rem',
-              
+              fontSize: '2rem',
               margin: '0 auto 14px',
+              boxShadow: `0 0 0 4px ${winnerColor}44`,
             }}
           >
             {winner?.name.charAt(0).toUpperCase()}
@@ -95,8 +128,8 @@ export default function End() {
           <h1
             style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '2.2rem',
-              
+              fontSize: '2.4rem',
+              fontWeight: 400,
               marginBottom: 4,
             }}
           >
@@ -104,89 +137,84 @@ export default function End() {
           </h1>
           <p style={{ fontSize: '0.88rem', color: 'var(--mid-grey)' }}>
             {room.scores[winner?.id] ?? 0} points
-            {winner?.id === myId && ' \u2014 that\u2019s you!'}
+            {winner?.id === myId && ' — that’s you!'}
           </p>
         </div>
+      </div>
+
+      <div className="container" style={{ padding: '32px 20px 60px' }}>
 
         {/* Leaderboard */}
         <div
           style={{
-            border: '1px solid var(--border)',
-            borderRadius: 4,
+            border: '2px solid var(--border)',
+            borderRadius: 'var(--radius)',
             overflow: 'hidden',
-            marginBottom: 32,
+            marginBottom: 28,
+            background: 'var(--white)',
           }}
         >
-          <div
-            style={{
-              padding: '10px 16px',
-              background: 'var(--off-white)',
-              borderBottom: '1px solid var(--border)',
-            }}
-          >
+          <div style={{ padding: '10px 16px', background: 'var(--light)', borderBottom: '1px solid var(--border)' }}>
             <p className="label" style={{ margin: 0 }}>Leaderboard</p>
           </div>
-          {sorted.map((p, i) => (
-            <div
-              key={p.id}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                padding: '14px 16px',
-                borderBottom: i < sorted.length - 1 ? '1px solid var(--border)' : 'none',
-                background: p.id === myId ? 'var(--off-white)' : 'var(--white)',
-              }}
-            >
-              <span
-                style={{
-                  width: 24,
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '1rem',
-                  color: i === 0 ? 'var(--black)' : 'var(--mid-grey)',
-                  fontWeight: i === 0 ? 600 : 400,
-                  marginRight: 14,
-                  flexShrink: 0,
-                }}
-              >
-                {i + 1}
-              </span>
+          {sorted.map((p, i) => {
+            const originalIndex = room.players.findIndex((pl) => pl.id === p.id);
+            const avatarColor = AVATAR_COLORS[originalIndex % AVATAR_COLORS.length];
+            return (
               <div
+                key={p.id}
                 style={{
-                  width: 30,
-                  height: 30,
-                  borderRadius: '50%',
-                  background: i === 0 ? 'var(--black)' : 'var(--light-grey)',
-                  color: i === 0 ? 'var(--white)' : 'var(--dark-grey)',
                   display: 'flex',
                   alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '0.72rem',
-                  marginRight: 12,
-                  flexShrink: 0,
+                  padding: '14px 16px',
+                  borderBottom: i < sorted.length - 1 ? '1px solid var(--border)' : 'none',
+                  background: p.id === myId ? 'var(--light)' : 'var(--white)',
                 }}
               >
-                {p.name.charAt(0).toUpperCase()}
+                <span
+                  style={{
+                    width: 26,
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '1rem',
+                    color: i === 0 ? 'var(--black)' : 'var(--mid-grey)',
+                    fontWeight: i === 0 ? 700 : 400,
+                    marginRight: 12,
+                    flexShrink: 0,
+                  }}
+                >
+                  {i + 1}
+                </span>
+                <div
+                  style={{
+                    width: 32, height: 32, borderRadius: '50%',
+                    background: avatarColor,
+                    color: '#fff',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '0.75rem', fontWeight: 700,
+                    marginRight: 12, flexShrink: 0,
+                  }}
+                >
+                  {p.name.charAt(0).toUpperCase()}
+                </div>
+                <span style={{ flex: 1, fontSize: '0.92rem' }}>
+                  {p.name}
+                  {p.id === myId && (
+                    <span style={{ marginLeft: 6, fontSize: '0.65rem', color: 'var(--mid-grey)' }}>(you)</span>
+                  )}
+                </span>
+                <span
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: '1.3rem',
+                    color: i === 0 ? 'var(--black)' : 'var(--dark-grey)',
+                    fontWeight: i === 0 ? 700 : 400,
+                  }}
+                >
+                  {room.scores[p.id] ?? 0}
+                </span>
               </div>
-              <span style={{ flex: 1, fontSize: '0.92rem' }}>
-                {p.name}
-                {p.id === myId && (
-                  <span style={{ marginLeft: 6, fontSize: '0.65rem', color: 'var(--mid-grey)' }}>
-                    (you)
-                  </span>
-                )}
-              </span>
-              <span
-                style={{
-                  fontFamily: 'var(--font-serif)',
-                  fontSize: '1.3rem',
-                  color: i === 0 ? 'var(--black)' : 'var(--dark-grey)',
-                  fontWeight: i === 0 ? 600 : 400,
-                }}
-              >
-                {room.scores[p.id] ?? 0}
-              </span>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* Best clue */}
@@ -194,16 +222,16 @@ export default function End() {
           <div
             style={{
               padding: '20px',
-              background: 'var(--off-white)',
-              border: '1px solid var(--border)',
-              borderRadius: 4,
-              marginBottom: 32,
+              background: 'var(--light)',
+              border: '2px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              marginBottom: 28,
             }}
           >
             <p
               style={{
-                fontSize: '0.65rem',
-                letterSpacing: '0.12em',
+                fontSize: '0.62rem',
+                letterSpacing: '0.14em',
                 textTransform: 'uppercase',
                 color: 'var(--mid-grey)',
                 marginBottom: 10,
@@ -214,12 +242,11 @@ export default function End() {
             <p
               style={{
                 fontFamily: 'var(--font-serif)',
-                fontSize: '1.4rem',
-                
-                marginBottom: 8,
+                fontSize: '1.5rem',
+                marginBottom: 10,
               }}
             >
-              "{bestClueEntry.clue}"
+              &ldquo;{bestClueEntry.clue}&rdquo;
             </p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <span style={{ fontSize: '0.75rem', color: 'var(--dark-grey)' }}>
@@ -248,22 +275,24 @@ export default function End() {
                     gap: 12,
                     padding: '10px 14px',
                     border: '1px solid var(--border)',
-                    borderRadius: 3,
+                    borderRadius: 'var(--radius)',
                     background: 'var(--white)',
                   }}
                 >
-                  <span style={{ fontSize: '0.65rem', color: 'var(--mid-grey)', minWidth: 18 }}>
-                    {i + 1}
-                  </span>
                   <span
                     style={{
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: '0.95rem',
-                      
-                      flex: 1,
+                      width: 22, height: 22, borderRadius: '50%',
+                      background: AVATAR_COLORS[i % AVATAR_COLORS.length],
+                      color: '#fff',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '0.62rem', fontWeight: 700,
+                      flexShrink: 0,
                     }}
                   >
-                    "{entry.clue}"
+                    {i + 1}
+                  </span>
+                  <span style={{ fontFamily: 'var(--font-serif)', fontSize: '0.95rem', flex: 1 }}>
+                    &ldquo;{entry.clue}&rdquo;
                   </span>
                   <span style={{ fontSize: '0.72rem', color: 'var(--mid-grey)' }}>
                     {entry.buyerName}
@@ -275,7 +304,7 @@ export default function End() {
         )}
 
         <button
-          className="btn-outline btn"
+          className="btn btn-coral"
           style={{ width: '100%' }}
           onClick={() => navigate('/')}
         >
