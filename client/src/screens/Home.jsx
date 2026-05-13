@@ -61,9 +61,6 @@ function FigureLeft() {
       {/* Red A-line skirt */}
       <path d="M44,147 L86,147 L105,258 L25,258 Z" fill="#D42B20" />
 
-      {/* Yellow bag — left side of skirt with U-shaped handle */}
-      <rect x="12" y="182" width="24" height="18" rx="3" fill="#F5B800" />
-      <path d="M18,182 L18,173 Q24,167 30,173 L30,182" stroke="#C49000" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
 
       {/* Legs — very long, thin */}
       <rect x="49" y="258" width="12" height="232" rx="6" fill="#F5C09A" />
