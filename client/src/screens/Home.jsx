@@ -26,9 +26,9 @@ function FigureLeft() {
     <svg viewBox="0 0 130 530" fill="none" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', display: 'block' }}>
 
-      {/* Long dark-brown hair strands — behind body */}
-      <rect x="39" y="22" width="14" height="270" rx="7" fill="#5C3215" />
-      <rect x="77" y="22" width="14" height="270" rx="7" fill="#5C3215" />
+      {/* Long dark-brown hair strands — stop at skirt waist (y=147) */}
+      <rect x="39" y="22" width="14" height="125" rx="7" fill="#5C3215" />
+      <rect x="77" y="22" width="14" height="125" rx="7" fill="#5C3215" />
 
       {/* Head */}
       <ellipse cx="65" cy="52" rx="21" ry="24" fill="#F5C09A" />
@@ -61,9 +61,9 @@ function FigureLeft() {
       {/* Red A-line skirt */}
       <path d="M44,147 L86,147 L105,258 L25,258 Z" fill="#D42B20" />
 
-      {/* Yellow bag — left hip */}
-      <rect x="16" y="182" width="22" height="16" rx="3" fill="#F5B800" />
-      <line x1="27" y1="182" x2="40" y2="196" stroke="#B8900A" strokeWidth="2" strokeLinecap="round" />
+      {/* Yellow bag — left side of skirt with U-shaped handle */}
+      <rect x="12" y="182" width="24" height="18" rx="3" fill="#F5B800" />
+      <path d="M18,182 L18,173 Q24,167 30,173 L30,182" stroke="#C49000" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
 
       {/* Legs — very long, thin */}
       <rect x="49" y="258" width="12" height="232" rx="6" fill="#F5C09A" />
@@ -218,8 +218,8 @@ export default function Home() {
           viewBox="0 0 400 120" preserveAspectRatio="xMidYMid slice">
           <Sparkle x={30}  y={50} size={14} color="#F5B800" />
           <Sparkle x={370} y={30} size={11} color="#E91E8C" />
-          <circle cx={20} cy={90} r={6} fill="#3B5BDB" opacity="0.7" />
-          <circle cx={382} cy={85} r={5} fill="#E63329" opacity="0.6" />
+          <circle cx={24} cy={45} r={6} fill="#3B5BDB" opacity="0.7" />
+          <circle cx={378} cy={40} r={5} fill="#E63329" opacity="0.6" />
         </svg>
 
         <h1
