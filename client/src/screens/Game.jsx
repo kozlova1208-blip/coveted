@@ -585,6 +585,7 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
         display: 'flex', flexWrap: 'nowrap', overflowX: 'auto',
         gap: 8, marginLeft: -20, marginRight: -20,
         paddingLeft: 20, paddingRight: 20,
+        paddingTop: 18, paddingBottom: 16,
         scrollSnapType: 'x mandatory',
         WebkitOverflowScrolling: 'touch',
         scrollbarWidth: 'none',
