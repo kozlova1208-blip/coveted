@@ -399,7 +399,7 @@ function PickingPhase({ isBuyer, clue, buyer, buyerColor, hand, selectedCard, se
           <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 16 }}>
             Choose the one that best matches the clue.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 16, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
             {hand?.map((card) => (
               <div key={card.id} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
                 <Card card={card} fill selected={selectedCard?.id === card.id} onClick={(c) => setSelectedCard(c)} />
@@ -434,7 +434,7 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
             Everyone is voting… you sit this one out.
           </p>
           <ProgressDots done={votesCount} total={totalVoters} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginTop: 20 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginTop: 20, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
             {tableCards.map((t) => (
               <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
                 <Card card={t.card} fill />
@@ -453,7 +453,7 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
           <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 16 }}>
             Tap a card to select, then confirm your vote.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 16 }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 16, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
             {tableCards.map((t) => (
               <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
                 <Card card={t.card} fill selected={voteCard?.cardId === t.cardId} onClick={() => setVoteCard(t)} />
@@ -548,7 +548,7 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
 
       {/* All cards */}
       <p className="label" style={{ marginBottom: 14 }}>All Cards This Round</p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
         {room.tableCards?.map((t) => (
           <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
             <Card card={t.card} fill votedBy={t.votedBy} />
