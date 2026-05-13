@@ -206,7 +206,7 @@ export default function Home() {
   }
 
   return (
-    <div style={{ background: '#EDE8DF', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#EDE8DF', minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
 
       {/* ── Full-width title ───────────────────────────────────────────── */}
       <div style={{ textAlign: 'center', padding: 'clamp(20px,5vw,40px) 0 12px', position: 'relative' }}>
@@ -248,189 +248,184 @@ export default function Home() {
         </p>
       </div>
 
-      {/* ── 3-column: figure | form | figure ──────────────────────────── */}
-      <div style={{ display: 'flex', flex: 1, alignItems: 'flex-end', minHeight: 0 }}>
+      {/* ── Scrollable centre: form + rules ───────────────────────────── */}
+      {/* Horizontal padding keeps content clear of fixed figures on both sides */}
+      <div style={{
+        flex: 1,
+        padding: '8px clamp(76px, 18vw, 140px) clamp(200px, 38vh, 300px)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center',
+      }}>
 
-        {/* Left figure */}
+        {/* Form card */}
         <div style={{
-          width: 'clamp(72px, 17vw, 130px)', flexShrink: 0,
-          alignSelf: 'flex-end', overflow: 'hidden',
-        }}>
-          <FigureLeft />
-        </div>
-
-        {/* ── Centre: form + rules ─────────────────────────────────────── */}
-        <div style={{
-          flex: 1, minWidth: 0,
-          overflowY: 'auto',
-          padding: '8px 10px 32px',
-          display: 'flex', flexDirection: 'column',
-          alignSelf: 'stretch',
-          justifyContent: 'center',
+          background: 'white',
+          borderRadius: 18,
+          padding: 'clamp(14px, 3vw, 24px)',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.09)',
+          maxWidth: 340,
+          width: '100%',
         }}>
 
-          {/* Form card */}
-          <div style={{
-            background: 'white',
-            borderRadius: 18,
-            padding: 'clamp(14px, 3vw, 24px)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.09)',
-            maxWidth: 340,
-            width: '100%',
-            margin: '0 auto',
-          }}>
-
-            {/* Tab switcher */}
-            <div style={{ display: 'flex', gap: 6, marginBottom: 20, background: '#F5F0EA', borderRadius: 100, padding: 4 }}>
-              {['create', 'join'].map((t) => (
-                <button key={t} type="button"
-                  onClick={() => { setTab(t); setError(''); }}
-                  style={{
-                    flex: 1, padding: '9px 4px',
-                    fontSize: '0.65rem', fontWeight: 700,
-                    letterSpacing: '0.08em', textTransform: 'uppercase',
-                    background: tab === t ? 'white' : 'transparent',
-                    border: 'none', borderRadius: 100,
-                    color: tab === t ? '#1a1a1a' : '#999',
-                    boxShadow: tab === t ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
-                    transition: 'all 0.15s', cursor: 'pointer',
-                  }}
-                >
-                  {t === 'create' ? 'New Room' : 'Join Room'}
-                </button>
-              ))}
-            </div>
-
-            <form onSubmit={tab === 'create' ? handleCreate : handleJoin}>
-
-              {/* Icon + Name row */}
-              <div style={{ marginBottom: 14 }}>
-                <label style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 7 }}>
-                  Icon &amp; Name
-                </label>
-                <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
-                  <button type="button" onClick={() => setEmojiOpen((o) => !o)}
-                    style={{
-                      width: 48, height: 48, borderRadius: '50%',
-                      border: `2px solid ${emojiOpen ? '#3B5BDB' : error === 'Pick an icon' ? '#E63329' : emoji ? '#3B5BDB' : '#E8E0D6'}`,
-                      background: '#FAFAFA', fontSize: emoji ? '1.5rem' : '1rem',
-                      cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      flexShrink: 0, transition: 'border-color 0.15s',
-                    }}
-                  >
-                    {emoji || '＋'}
-                  </button>
-                  <input className="input" type="text" placeholder="Your name"
-                    maxLength={20} value={name}
-                    onChange={(e) => { setName(e.target.value); setError(''); }}
-                    style={{ flex: 1, height: 48, fontSize: '0.9rem' }}
-                  />
-                </div>
-
-                {/* Emoji grid */}
-                {emojiOpen && (
-                  <div style={{
-                    marginTop: 8, padding: 10,
-                    background: 'white', border: '2px solid #E8E0D6', borderRadius: 12,
-                    display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(36px, 1fr))', gap: 4,
-                  }}>
-                    {EMOJIS.map((e) => (
-                      <button key={e} type="button"
-                        onClick={() => { setEmoji(e); setEmojiOpen(false); setError(''); }}
-                        style={{
-                          background: emoji === e ? '#EEF0FF' : 'transparent',
-                          border: `2px solid ${emoji === e ? '#3B5BDB' : 'transparent'}`,
-                          borderRadius: 7, fontSize: '1.25rem', padding: '3px',
-                          cursor: 'pointer', lineHeight: 1,
-                        }}
-                      >
-                        {e}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Room code — join only */}
-              {tab === 'join' && (
-                <div style={{ marginBottom: 14 }}>
-                  <label style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 7 }}>
-                    Room Code
-                  </label>
-                  <input className="input" type="text" placeholder="ABCD"
-                    maxLength={4} value={code}
-                    onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
-                    style={{ letterSpacing: '0.24em', fontWeight: 700, fontSize: '1.1rem', textAlign: 'center' }}
-                  />
-                </div>
-              )}
-
-              {error && <p style={{ fontSize: '0.78rem', color: '#E63329', marginBottom: 10 }}>{error}</p>}
-
-              <button type="submit" disabled={loading || !connected}
+          {/* Tab switcher */}
+          <div style={{ display: 'flex', gap: 6, marginBottom: 20, background: '#F5F0EA', borderRadius: 100, padding: 4 }}>
+            {['create', 'join'].map((t) => (
+              <button key={t} type="button"
+                onClick={() => { setTab(t); setError(''); }}
                 style={{
-                  width: '100%', padding: '13px',
-                  fontSize: '0.72rem', fontWeight: 800,
-                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  flex: 1, padding: '9px 4px',
+                  fontSize: '0.65rem', fontWeight: 700,
+                  letterSpacing: '0.08em', textTransform: 'uppercase',
+                  background: tab === t ? 'white' : 'transparent',
                   border: 'none', borderRadius: 100,
-                  background: tab === 'create' ? '#E63329' : '#3B5BDB',
-                  color: 'white', cursor: loading || !connected ? 'not-allowed' : 'pointer',
-                  opacity: loading || !connected ? 0.45 : 1,
-                  transition: 'transform 0.15s, box-shadow 0.15s',
+                  color: tab === t ? '#1a1a1a' : '#999',
+                  boxShadow: tab === t ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
+                  transition: 'all 0.15s', cursor: 'pointer',
                 }}
               >
-                {loading ? 'Please wait…' : tab === 'create' ? 'Create Room' : 'Join Room'}
+                {t === 'create' ? 'New Room' : 'Join Room'}
               </button>
-
-              {!connected && (
-                <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#aaa', marginTop: 8 }}>
-                  Connecting to server…
-                </p>
-              )}
-            </form>
-
-            {/* How to play — always visible */}
-            <div style={{ marginTop: 16, borderTop: '1.5px dashed #E8E0D6', paddingTop: 14 }}>
-              <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#888', marginBottom: 12 }}>
-                How to play
-              </p>
-              <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                {[
-                  "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. Don't be too obvious (everyone guesses = 0 pts) or too cryptic (nobody guesses = 0 pts). Aim for the sweet spot.",
-                  "Everyone else picks a card from their hand that best matches the clue. Make others vote for yours instead of the Buyer's.",
-                  "Cards are revealed anonymously. Vote for the Buyer's card.",
-                  "Score points for correct guesses — and for fooling others with your decoys.",
-                ].map((step, i) => (
-                  <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                    <span style={{
-                      flexShrink: 0, width: 20, height: 20, borderRadius: '50%',
-                      background: STEP_COLORS[i], color: 'white',
-                      fontSize: '0.6rem', fontWeight: 800,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      marginTop: 1,
-                    }}>
-                      {i + 1}
-                    </span>
-                    <span style={{ fontSize: '0.76rem', color: '#555', lineHeight: 1.5 }}>{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
+            ))}
           </div>
 
-          {/* Rotated side labels — purely decorative */}
-          <p style={{ textAlign: 'center', marginTop: 14, fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9088' }}>
-            3–9 PLAYERS · FASHION · GAME
-          </p>
+          <form onSubmit={tab === 'create' ? handleCreate : handleJoin}>
+
+            {/* Icon + Name row */}
+            <div style={{ marginBottom: 14 }}>
+              <label style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 7 }}>
+                Icon &amp; Name
+              </label>
+              <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+                <button type="button" onClick={() => setEmojiOpen((o) => !o)}
+                  style={{
+                    width: 48, height: 48, borderRadius: '50%',
+                    border: `2px solid ${emojiOpen ? '#3B5BDB' : error === 'Pick an icon' ? '#E63329' : emoji ? '#3B5BDB' : '#E8E0D6'}`,
+                    background: '#FAFAFA', fontSize: emoji ? '1.5rem' : '1rem',
+                    cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, transition: 'border-color 0.15s',
+                  }}
+                >
+                  {emoji || '＋'}
+                </button>
+                <input className="input" type="text" placeholder="Your name"
+                  maxLength={20} value={name}
+                  onChange={(e) => { setName(e.target.value); setError(''); }}
+                  style={{ flex: 1, height: 48, fontSize: '0.9rem' }}
+                />
+              </div>
+
+              {/* Emoji grid */}
+              {emojiOpen && (
+                <div style={{
+                  marginTop: 8, padding: 10,
+                  background: 'white', border: '2px solid #E8E0D6', borderRadius: 12,
+                  display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(36px, 1fr))', gap: 4,
+                }}>
+                  {EMOJIS.map((e) => (
+                    <button key={e} type="button"
+                      onClick={() => { setEmoji(e); setEmojiOpen(false); setError(''); }}
+                      style={{
+                        background: emoji === e ? '#EEF0FF' : 'transparent',
+                        border: `2px solid ${emoji === e ? '#3B5BDB' : 'transparent'}`,
+                        borderRadius: 7, fontSize: '1.25rem', padding: '3px',
+                        cursor: 'pointer', lineHeight: 1,
+                      }}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Room code — join only */}
+            {tab === 'join' && (
+              <div style={{ marginBottom: 14 }}>
+                <label style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#888', display: 'block', marginBottom: 7 }}>
+                  Room Code
+                </label>
+                <input className="input" type="text" placeholder="ABCD"
+                  maxLength={4} value={code}
+                  onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
+                  style={{ letterSpacing: '0.24em', fontWeight: 700, fontSize: '1.1rem', textAlign: 'center' }}
+                />
+              </div>
+            )}
+
+            {error && <p style={{ fontSize: '0.78rem', color: '#E63329', marginBottom: 10 }}>{error}</p>}
+
+            <button type="submit" disabled={loading || !connected}
+              style={{
+                width: '100%', padding: '13px',
+                fontSize: '0.72rem', fontWeight: 800,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                border: 'none', borderRadius: 100,
+                background: tab === 'create' ? '#E63329' : '#3B5BDB',
+                color: 'white', cursor: loading || !connected ? 'not-allowed' : 'pointer',
+                opacity: loading || !connected ? 0.45 : 1,
+                transition: 'transform 0.15s, box-shadow 0.15s',
+              }}
+            >
+              {loading ? 'Please wait…' : tab === 'create' ? 'Create Room' : 'Join Room'}
+            </button>
+
+            {!connected && (
+              <p style={{ textAlign: 'center', fontSize: '0.7rem', color: '#aaa', marginTop: 8 }}>
+                Connecting to server…
+              </p>
+            )}
+          </form>
+
+          {/* How to play — always visible */}
+          <div style={{ marginTop: 16, borderTop: '1.5px dashed #E8E0D6', paddingTop: 14 }}>
+            <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#888', marginBottom: 12 }}>
+              How to play
+            </p>
+            <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {[
+                "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. Don't be too obvious (everyone guesses = 0 pts) or too cryptic (nobody guesses = 0 pts). Aim for the sweet spot.",
+                "Everyone else picks a card from their hand that best matches the clue. Make others vote for yours instead of the Buyer's.",
+                "Cards are revealed anonymously. Vote for the Buyer's card.",
+                "Score points for correct guesses — and for fooling others with your decoys.",
+              ].map((step, i) => (
+                <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                  <span style={{
+                    flexShrink: 0, width: 20, height: 20, borderRadius: '50%',
+                    background: STEP_COLORS[i], color: 'white',
+                    fontSize: '0.6rem', fontWeight: 800,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    marginTop: 1,
+                  }}>
+                    {i + 1}
+                  </span>
+                  <span style={{ fontSize: '0.76rem', color: '#555', lineHeight: 1.5 }}>{step}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
 
-        {/* Right figure */}
-        <div style={{
-          width: 'clamp(72px, 17vw, 130px)', flexShrink: 0,
-          alignSelf: 'flex-end', overflow: 'hidden',
-        }}>
-          <FigureRight />
-        </div>
+        {/* Decorative label */}
+        <p style={{ textAlign: 'center', marginTop: 14, fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#9A9088' }}>
+          3–9 PLAYERS · FASHION · GAME
+        </p>
+      </div>
+
+      {/* ── Left figure — FIXED, never moves ──────────────────────────── */}
+      <div style={{
+        position: 'fixed', bottom: 0, left: 0,
+        width: 'clamp(72px, 17vw, 130px)',
+        zIndex: 1, pointerEvents: 'none',
+      }}>
+        <FigureLeft />
+      </div>
+
+      {/* ── Right figure — FIXED, never moves ─────────────────────────── */}
+      <div style={{
+        position: 'fixed', bottom: 0, right: 0,
+        width: 'clamp(72px, 17vw, 130px)',
+        zIndex: 1, pointerEvents: 'none',
+      }}>
+        <FigureRight />
       </div>
 
       {/* Sparkles bottom strip */}
