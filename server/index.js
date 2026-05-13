@@ -214,9 +214,12 @@ function calculateScores(room) {
   }
 
   // Bonus: every non-buyer gets 1 point per vote their decoy card received
+  // from OTHER players (self-votes excluded)
   room.table.forEach((entry) => {
     if (entry.playerId !== room.buyerId) {
-      const voteCount = Object.values(room.votes).filter((v) => v === entry.cardId).length;
+      const voteCount = Object.entries(room.votes).filter(
+        ([voterId, votedCardId]) => votedCardId === entry.cardId && voterId !== entry.playerId
+      ).length;
       deltas[entry.playerId] += voteCount;
       room.scores[entry.playerId] = (room.scores[entry.playerId] ?? 0) + voteCount;
     }
@@ -261,11 +264,15 @@ function autoPick(code) {
 function autoVote(code) {
   const room = rooms[code];
   if (!room || room.status !== 'voting') return;
-  const otherCards = room.tableShuffled.filter((t) => t.cardId !== room.buyerCard?.id);
   room.players.forEach((p) => {
     if (p.id !== room.buyerId && !p.disconnected && !room.votes[p.id]) {
-      if (otherCards.length) {
-        room.votes[p.id] = otherCards[Math.floor(Math.random() * otherCards.length)].cardId;
+      // Exclude buyer's card AND the player's own decoy card
+      const myCardId = room.table.find((t) => t.playerId === p.id)?.cardId;
+      const choices = room.tableShuffled.filter(
+        (t) => t.cardId !== room.buyerCard?.id && t.cardId !== myCardId
+      );
+      if (choices.length) {
+        room.votes[p.id] = choices[Math.floor(Math.random() * choices.length)].cardId;
       }
     }
   });
@@ -391,6 +398,10 @@ io.on('connection', (socket) => {
     if (!room || room.status !== 'voting') return;
     if (socket.id === room.buyerId) return;
     if (room.votes[socket.id]) return;
+
+    // Prevent voting for own decoy card
+    const myTableEntry = room.table.find((t) => t.playerId === socket.id);
+    if (myTableEntry && myTableEntry.cardId === cardId) return;
 
     room.votes[socket.id] = cardId;
 
