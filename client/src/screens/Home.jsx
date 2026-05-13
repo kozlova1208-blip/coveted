@@ -107,7 +107,6 @@ export default function Home() {
   const [error,     setError]     = useState('');
   const [loading,   setLoading]   = useState(false);
   const [emojiOpen, setEmojiOpen] = useState(false);
-  const [rulesOpen, setRulesOpen] = useState(false);
 
   useEffect(() => {
     const saved = sessionStorage.getItem('coveted:name');
@@ -226,6 +225,9 @@ export default function Home() {
             borderRadius: 18,
             padding: 'clamp(14px, 3vw, 24px)',
             boxShadow: '0 4px 24px rgba(0,0,0,0.09)',
+            maxWidth: 340,
+            width: '100%',
+            margin: '0 auto',
           }}>
 
             {/* Tab switcher */}
@@ -337,48 +339,32 @@ export default function Home() {
               )}
             </form>
 
-            {/* How to play — collapsible */}
+            {/* How to play — always visible */}
             <div style={{ marginTop: 16, borderTop: '1.5px dashed #E8E0D6', paddingTop: 14 }}>
-              <button
-                type="button"
-                onClick={() => setRulesOpen((o) => !o)}
-                style={{
-                  width: '100%', background: 'none', border: 'none', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  padding: 0,
-                }}
-              >
-                <span style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#888' }}>
-                  How to play
-                </span>
-                <span style={{ fontSize: '0.8rem', color: '#aaa', transition: 'transform 0.2s', display: 'inline-block', transform: rulesOpen ? 'rotate(180deg)' : 'none' }}>
-                  ▾
-                </span>
-              </button>
-
-              {rulesOpen && (
-                <ol style={{ listStyle: 'none', padding: 0, marginTop: 12, display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {[
-                    "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. Don't be too obvious (everyone guesses = 0 pts) or too cryptic (nobody guesses = 0 pts). Aim for the sweet spot.",
-                    "Everyone else picks a card from their hand that best matches the clue. Make others vote for yours instead of the Buyer's.",
-                    "Cards are revealed anonymously. Vote for the Buyer's card.",
-                    "Score points for correct guesses — and for fooling others with your decoys.",
-                  ].map((step, i) => (
-                    <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                      <span style={{
-                        flexShrink: 0, width: 20, height: 20, borderRadius: '50%',
-                        background: STEP_COLORS[i], color: 'white',
-                        fontSize: '0.6rem', fontWeight: 800,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        marginTop: 1,
-                      }}>
-                        {i + 1}
-                      </span>
-                      <span style={{ fontSize: '0.76rem', color: '#555', lineHeight: 1.5 }}>{step}</span>
-                    </li>
-                  ))}
-                </ol>
-              )}
+              <p style={{ fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#888', marginBottom: 12 }}>
+                How to play
+              </p>
+              <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {[
+                  "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. Don't be too obvious (everyone guesses = 0 pts) or too cryptic (nobody guesses = 0 pts). Aim for the sweet spot.",
+                  "Everyone else picks a card from their hand that best matches the clue. Make others vote for yours instead of the Buyer's.",
+                  "Cards are revealed anonymously. Vote for the Buyer's card.",
+                  "Score points for correct guesses — and for fooling others with your decoys.",
+                ].map((step, i) => (
+                  <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <span style={{
+                      flexShrink: 0, width: 20, height: 20, borderRadius: '50%',
+                      background: STEP_COLORS[i], color: 'white',
+                      fontSize: '0.6rem', fontWeight: 800,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      marginTop: 1,
+                    }}>
+                      {i + 1}
+                    </span>
+                    <span style={{ fontSize: '0.76rem', color: '#555', lineHeight: 1.5 }}>{step}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           </div>
 
