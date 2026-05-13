@@ -88,7 +88,11 @@ export default function Lobby() {
 
       {/* Header */}
       <header className="site-header" style={{ background: 'var(--cream)' }}>
-        <span className="wordmark">Luxit</span>
+        <span style={{ fontFamily: "'Inter', system-ui, sans-serif", fontSize: '1.2rem', fontWeight: 900, letterSpacing: '-0.01em', lineHeight: 1 }}>
+          {'LUXIT'.split('').map((l, i) => (
+            <span key={i} style={{ color: ['#E63329','#F5B800','#3B5BDB','#FF6B35','#E91E8C'][i] }}>{l}</span>
+          ))}
+        </span>
         <span className="phase-badge">
           <span className="phase-dot" />
           Lobby

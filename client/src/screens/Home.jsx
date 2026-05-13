@@ -332,7 +332,7 @@ export default function Home() {
                   <div style={{
                     marginTop: 8, padding: 10,
                     background: 'white', border: '2px solid #E8E0D6', borderRadius: 12,
-                    display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 3,
+                    display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4,
                   }}>
                     {EMOJIS.map((e) => (
                       <button key={e} type="button"
