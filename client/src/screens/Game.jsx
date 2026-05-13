@@ -517,22 +517,14 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
 
 function ResultsPhase({ room, myId, isHost, onNextRound }) {
   const buyer = room.players.find((p) => p.id === room.buyerId);
-  const buyerIndex = room.players.findIndex((p) => p.id === room.buyerId);
-  const buyerTableEntry = room.tableCards?.find((t) => t.cardId === room.buyerCardId);
-
   return (
     <div>
-      {/* Buyer's reveal */}
+      {/* Buyer's reveal — clue only; card is highlighted in "All Cards" below */}
       <div style={{ textAlign: 'center', marginBottom: 28 }}>
         <p className="label" style={{ marginBottom: 4 }}>{buyer?.name}'s Clue</p>
-        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', marginBottom: 20 }}>
+        <p style={{ fontFamily: 'var(--font-serif)', fontSize: '1.6rem', marginBottom: 0 }}>
           &ldquo;{room.clue}&rdquo;
         </p>
-        {buyerTableEntry && (
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Card card={buyerTableEntry.card} votedBy={buyerTableEntry.votedBy} />
-          </div>
-        )}
       </div>
 
       {/* Leaderboard — sorted horizontal bars with round delta */}
