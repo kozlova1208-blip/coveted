@@ -581,9 +581,16 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
 
       {/* All cards */}
       <p className="label" style={{ marginBottom: 14 }}>All Cards This Round</p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
+      <div style={{
+        display: 'flex', flexWrap: 'nowrap', overflowX: 'auto',
+        gap: 8, marginLeft: -20, marginRight: -20,
+        paddingLeft: 20, paddingRight: 20,
+        scrollSnapType: 'x mandatory',
+        WebkitOverflowScrolling: 'touch',
+        scrollbarWidth: 'none',
+      }}>
         {room.tableCards?.map((t) => (
-          <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)', position: 'relative' }}>
+          <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)', flexShrink: 0, scrollSnapAlign: 'start', position: 'relative' }}>
             {t.isBuyer && (
               <>
                 {/* golden glow ring */}
