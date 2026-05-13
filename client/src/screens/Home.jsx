@@ -20,75 +20,125 @@ function Sparkle({ x, y, size = 14, color = '#F5B800' }) {
   return <path d={d} fill={color} transform={`translate(${x},${y})`} />;
 }
 
-/* ─── Left figure: dark hair, pink top, red skirt ───────────────────────── */
+/* ─── Left figure: brunette, pink top, red skirt, yellow bag ────────────── */
 function FigureLeft() {
   return (
     <svg viewBox="0 0 130 530" fill="none" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', display: 'block' }}>
-      <rect x="48" y="32" width="8"  height="240" rx="4" fill="#2C1810" />
-      <rect x="59" y="32" width="8"  height="260" rx="4" fill="#3D2314" />
-      <ellipse cx="76" cy="38" rx="22" ry="26" fill="#F4C09A" />
-      <ellipse cx="76" cy="18" rx="24" ry="18" fill="#2C1810" />
-      <rect x="52" y="18" width="14" height="30" fill="#2C1810" />
-      <ellipse cx="68" cy="36" rx="3.5" ry="4"   fill="#1A0800" />
-      <ellipse cx="84" cy="36" rx="3.5" ry="4"   fill="#1A0800" />
-      <circle  cx="69.5" cy="34.5" r="1.4" fill="white" />
-      <circle  cx="85.5" cy="34.5" r="1.4" fill="white" />
-      <path d="M66,46 Q76,53 86,46" stroke="#C07060" strokeWidth="1.5" strokeLinecap="round" />
-      <ellipse cx="57" cy="44" rx="8" ry="5" fill="#FFB0B0" opacity="0.4" />
-      <ellipse cx="95" cy="44" rx="8" ry="5" fill="#FFB0B0" opacity="0.4" />
-      <rect x="69" y="62" width="14" height="15" fill="#F4C09A" />
-      <path d="M44,77 L108,77 L108,130 L44,130 Z" fill="#F5A0C0" />
-      <path d="M62,77 Q76,89 90,77" fill="#F5A0C0" />
-      <path d="M36,130 L116,130 L126,235 L26,235 Z" fill="#D93025" />
-      <rect x="112" y="142" width="16" height="14" rx="3" fill="#F5B800" />
-      <path d="M115,142 Q120,133 125,142" stroke="#C49000" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <rect x="44" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
-      <rect x="78" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
-      <rect x="34" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
-      <rect x="34" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
-      <rect x="68" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
-      <rect x="68" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
+
+      {/* Long dark-brown hair strands — behind body */}
+      <rect x="39" y="22" width="14" height="270" rx="7" fill="#5C3215" />
+      <rect x="77" y="22" width="14" height="270" rx="7" fill="#5C3215" />
+
+      {/* Head */}
+      <ellipse cx="65" cy="52" rx="21" ry="24" fill="#F5C09A" />
+
+      {/* Hair cap (top of head) */}
+      <ellipse cx="65" cy="28" rx="26" ry="18" fill="#5C3215" />
+      <rect x="39" y="22" width="52" height="22" fill="#5C3215" />
+
+      {/* Rosy cheeks */}
+      <ellipse cx="50" cy="58" rx="7" ry="5" fill="#FFB0A0" opacity="0.45" />
+      <ellipse cx="80" cy="58" rx="7" ry="5" fill="#FFB0A0" opacity="0.45" />
+
+      {/* Eyes */}
+      <ellipse cx="58" cy="50" rx="2.5" ry="3" fill="#1A0A05" />
+      <ellipse cx="72" cy="50" rx="2.5" ry="3" fill="#1A0A05" />
+
+      {/* Smile */}
+      <path d="M60,63 Q65,69 70,63" stroke="#C05050" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+
+      {/* Neck */}
+      <rect x="61" y="74" width="8" height="15" fill="#F5C09A" />
+
+      {/* Shoulder straps */}
+      <rect x="57" y="76" width="3" height="8" rx="1.5" fill="#2A2A2A" />
+      <rect x="70" y="76" width="3" height="8" rx="1.5" fill="#2A2A2A" />
+
+      {/* Pink sleeveless top */}
+      <path d="M46,87 L84,87 L81,147 L49,147 Z" fill="#F9C8D4" />
+
+      {/* Red A-line skirt */}
+      <path d="M44,147 L86,147 L105,258 L25,258 Z" fill="#D42B20" />
+
+      {/* Yellow bag — left hip */}
+      <rect x="16" y="182" width="22" height="16" rx="3" fill="#F5B800" />
+      <line x1="27" y1="182" x2="40" y2="196" stroke="#B8900A" strokeWidth="2" strokeLinecap="round" />
+
+      {/* Legs — very long, thin */}
+      <rect x="49" y="258" width="12" height="232" rx="6" fill="#F5C09A" />
+      <rect x="69" y="258" width="12" height="232" rx="6" fill="#F5C09A" />
+
+      {/* Shoes — solid black pointed triangles */}
+      <polygon points="48,488 63,488 54,514" fill="#1A1A1A" />
+      <polygon points="67,488 82,488 73,514" fill="#1A1A1A" />
     </svg>
   );
 }
 
-/* ─── Right figure: blonde, sunglasses, striped top, blue skirt ─────────── */
+/* ─── Right figure: blonde, sunglasses, breton stripes, cobalt skirt ────── */
 function FigureRight() {
   return (
     <svg viewBox="0 0 130 530" fill="none" xmlns="http://www.w3.org/2000/svg"
       style={{ width: '100%', height: '100%', display: 'block' }}>
-      <rect x="18" y="28" width="10" height="200" rx="5" fill="#D4A830" opacity="0.75" />
-      <rect x="100" y="28" width="10" height="215" rx="5" fill="#D4A830" opacity="0.75" />
-      <ellipse cx="64" cy="36" rx="22" ry="26" fill="#F4C09A" />
-      <ellipse cx="64" cy="15" rx="25" ry="18" fill="#D4A830" />
-      <rect x="84" y="15" width="14" height="28" fill="#D4A830" />
-      <rect x="28" y="15" width="14" height="24" fill="#D4A830" />
-      <rect x="46" y="28" width="15" height="10" rx="5" fill="#111" />
-      <rect x="63" y="28" width="15" height="10" rx="5" fill="#111" />
-      <rect x="61" y="31" width="4"  height="2"  fill="#111" />
-      <rect x="41" y="32" width="7"  height="2"  fill="#111" />
-      <rect x="78" y="32" width="7"  height="2"  fill="#111" />
-      <path d="M55,47 Q64,54 74,47" stroke="#C07060" strokeWidth="1.5" strokeLinecap="round" />
-      <ellipse cx="46" cy="43" rx="8" ry="5" fill="#FFB0B0" opacity="0.35" />
-      <ellipse cx="82" cy="43" rx="8" ry="5" fill="#FFB0B0" opacity="0.35" />
-      <rect x="57" y="60" width="14" height="15" fill="#F4C09A" />
-      <rect x="35" y="75" width="68" height="55" fill="white" />
-      {[0,1,2,3,4,5].map((i) => (
-        <rect key={i} x="35" y={75 + i * 9} width="68" height="4.5" fill="#111" />
+
+      {/* Long blonde hair strands — behind body */}
+      <rect x="22" y="20" width="14" height="225" rx="7" fill="#D4B030" opacity="0.85" />
+      <rect x="94" y="20" width="14" height="225" rx="7" fill="#D4B030" opacity="0.85" />
+
+      {/* Head */}
+      <ellipse cx="65" cy="52" rx="21" ry="24" fill="#F5C09A" />
+
+      {/* Blonde hair cap */}
+      <ellipse cx="65" cy="26" rx="28" ry="19" fill="#D4B030" />
+      <rect x="37" y="19" width="56" height="24" fill="#D4B030" />
+
+      {/* Rosy cheeks */}
+      <ellipse cx="50" cy="60" rx="7" ry="5" fill="#FFB0A0" opacity="0.38" />
+      <ellipse cx="80" cy="60" rx="7" ry="5" fill="#FFB0A0" opacity="0.38" />
+
+      {/* Rectangular sunglasses */}
+      <rect x="47" y="46" width="15" height="9" rx="3" fill="#111" />
+      <rect x="65" y="46" width="15" height="9" rx="3" fill="#111" />
+      <rect x="62" y="49" width="3" height="2.5" fill="#111" />   {/* bridge */}
+      <rect x="41" y="49" width="6" height="2" fill="#111" />     {/* left arm */}
+      <rect x="80" y="49" width="6" height="2" fill="#111" />     {/* right arm */}
+
+      {/* Pink lips */}
+      <path d="M59,64 Q65,70 71,64" stroke="#E040A0" strokeWidth="1.8" strokeLinecap="round" fill="none" />
+
+      {/* Neck */}
+      <rect x="61" y="74" width="8" height="15" fill="#F5C09A" />
+
+      {/* Breton-stripe top — white base + black stripes */}
+      <rect x="35" y="88" width="60" height="58" rx="2" fill="white" />
+      {[0,1,2,3,4,5,6,7,8].map((i) => (
+        <rect key={i} x="35" y={88 + i * 6.4} width="60" height="3.2" fill="#111" />
       ))}
-      <path d="M27,130 L101,130 L110,235 L18,235 Z" fill="#3B5BDB" />
-      <rect x="4"  y="142" width="16" height="14" rx="3" fill="#F5B800" />
-      <path d="M7,142 Q12,133 17,142" stroke="#C49000" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <rect x="32" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
-      {[0,1,2,3,4,5,6,7,8,9].map((i) => (
-        <circle key={i} cx="41" cy={258 + i * 23} r="2.2" fill="#555" opacity="0.35" />
+
+      {/* Cobalt blue A-line skirt */}
+      <path d="M33,146 L97,146 L112,258 L18,258 Z" fill="#2B5CE6" />
+
+      {/* Yellow bag with strap + red top stripe */}
+      <line x1="36" y1="155" x2="20" y2="205" stroke="#444" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="9" y="204" width="24" height="18" rx="3" fill="#F5B800" />
+      <rect x="9" y="204" width="24" height="5" rx="2" fill="#D42B20" />
+
+      {/* Legs — very long, thin */}
+      <rect x="49" y="258" width="12" height="232" rx="6" fill="#F5C09A" />
+      <rect x="69" y="258" width="12" height="232" rx="6" fill="#F5C09A" />
+
+      {/* Dots on both legs */}
+      {Array.from({ length: 10 }, (_, i) => (
+        <circle key={`dl${i}`} cx="55" cy={276 + i * 21} r="2" fill="#555" opacity="0.38" />
       ))}
-      <rect x="66" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
-      <rect x="22" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
-      <rect x="22" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
-      <rect x="56" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
-      <rect x="56" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
+      {Array.from({ length: 10 }, (_, i) => (
+        <circle key={`dr${i}`} cx="75" cy={276 + i * 21} r="2" fill="#555" opacity="0.38" />
+      ))}
+
+      {/* Shoes — solid black pointed triangles */}
+      <polygon points="48,488 63,488 54,514" fill="#1A1A1A" />
+      <polygon points="67,488 82,488 73,514" fill="#1A1A1A" />
     </svg>
   );
 }
