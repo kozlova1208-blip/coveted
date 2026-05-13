@@ -195,12 +195,16 @@ function calculateScores(room) {
   const deltas = {};
   room.players.forEach((p) => (deltas[p.id] = 0));
 
-  if (correctVoters.length === 0 || correctVoters.length === nonBuyers.length) {
+  const isFail = correctVoters.length === 0 || correctVoters.length === nonBuyers.length;
+
+  if (isFail) {
+    // Fail: buyer gets 0, all non-buyers get 2
     nonBuyers.forEach((p) => {
       deltas[p.id] += 2;
       room.scores[p.id] = (room.scores[p.id] ?? 0) + 2;
     });
   } else {
+    // Success: buyer and correct voters each get 3
     deltas[room.buyerId] += 3;
     room.scores[room.buyerId] = (room.scores[room.buyerId] ?? 0) + 3;
     correctVoters.forEach((p) => {
@@ -209,13 +213,12 @@ function calculateScores(room) {
     });
   }
 
+  // Bonus: every non-buyer gets 1 point per vote their decoy card received
   room.table.forEach((entry) => {
     if (entry.playerId !== room.buyerId) {
       const voteCount = Object.values(room.votes).filter((v) => v === entry.cardId).length;
-      if (voteCount > 0) {
-        deltas[entry.playerId] += voteCount;
-        room.scores[entry.playerId] = (room.scores[entry.playerId] ?? 0) + voteCount;
-      }
+      deltas[entry.playerId] += voteCount;
+      room.scores[entry.playerId] = (room.scores[entry.playerId] ?? 0) + voteCount;
     }
   });
 

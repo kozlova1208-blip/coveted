@@ -354,11 +354,18 @@ export default function Lobby() {
           }}
         >
           <p className="label" style={{ marginBottom: 8 }}>Quick Rules</p>
-          <p style={{ fontSize: '0.8rem', color: 'var(--dark-grey)', lineHeight: 1.65 }}>
-            The Buyer gives a clue for their item. Everyone else picks a card from their
-            hand. You vote for the Buyer's card. Earn points by finding the right card —
-            and by fooling others with your decoys.
-          </p>
+          <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {[
+              { label: 'Success', desc: 'If some (but not all) guess the Buyer\'s card — Buyer + correct voters each get 3 pts.' },
+              { label: 'Fail', desc: 'If nobody or everyone guesses right — Buyer gets 0 pts, all others get 2 pts.' },
+              { label: 'Bonus', desc: '+1 pt for every vote your decoy card receives from other players.' },
+            ].map(({ label, desc }) => (
+              <li key={label} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <span style={{ fontSize: '0.62rem', fontWeight: 800, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--coral)', flexShrink: 0, paddingTop: 1 }}>{label}</span>
+                <span style={{ fontSize: '0.78rem', color: 'var(--dark-grey)', lineHeight: 1.55 }}>{desc}</span>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </div>

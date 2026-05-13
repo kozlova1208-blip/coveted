@@ -382,10 +382,10 @@ export default function Home() {
             </p>
             <ol style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: 10 }}>
               {[
-                "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. Don't be too obvious (everyone guesses = 0 pts) or too cryptic (nobody guesses = 0 pts). Aim for the sweet spot.",
-                "Everyone else picks a card from their hand that best matches the clue. Make others vote for yours instead of the Buyer's.",
-                "Cards are revealed anonymously. Vote for the Buyer's card.",
-                "Score points for correct guesses — and for fooling others with your decoys.",
+                "One player is the Buyer. They see a luxury item and give a clue — a word, a vibe, a phrase. Aim for the sweet spot: too obvious or too cryptic and the Buyer scores 0.",
+                "Everyone else picks a card from their hand that fits the clue best — hoping others vote for theirs instead of the Buyer's.",
+                "Cards are revealed anonymously. Everyone votes for the card they think belongs to the Buyer.",
+                "Success (some guess right): Buyer + correct voters get 3 pts. Fail (all or none): Buyer gets 0, others get 2. Bonus: +1 pt per vote your decoy card receives.",
               ].map((step, i) => (
                 <li key={i} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                   <span style={{
