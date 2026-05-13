@@ -3,7 +3,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
 import { avatarChar } from '../utils/avatar';
 
-const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#9B5DE5'];
+const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#F4845F', '#00C9C8'];
 
 function Flower({ x, y, size = 32, color = '#FF6B6B', centerColor = '#FFD166', rotate = 0, opacity = 0.8 }) {
   return (

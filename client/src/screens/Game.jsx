@@ -12,7 +12,7 @@ const PHASE_LABELS = {
   results:  'Round Results',
 };
 
-const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#9B5DE5'];
+const AVATAR_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F', '#06D6A0', '#FF99C8', '#FFD166', '#F4845F', '#00C9C8'];
 
 export default function Game() {
   const { code } = useParams();

@@ -289,7 +289,7 @@ io.on('connection', (socket) => {
     const room = rooms[upper];
     if (!room) return cb({ success: false, error: 'Room not found' });
     if (room.status !== 'lobby') return cb({ success: false, error: 'Game already started' });
-    if (room.players.length >= 8) return cb({ success: false, error: 'Room is full' });
+    if (room.players.length >= 9) return cb({ success: false, error: 'Room is full' });
     if (room.players.some((p) => p.name.toLowerCase() === name.toLowerCase()))
       return cb({ success: false, error: 'Name already taken in this room' });
 

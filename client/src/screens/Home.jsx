@@ -139,7 +139,7 @@ export default function Home() {
           </h1>
           <p style={{ fontSize: '0.9rem', color: 'var(--dark-grey)', maxWidth: 300, margin: '0 auto', lineHeight: 1.65 }}>
             Give a clue. Pick the card. Fool your friends.
-            <br />3–8 players.
+            <br />3–9 players.
           </p>
         </div>
       </div>
