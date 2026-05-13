@@ -25,6 +25,9 @@ export default function Lobby() {
   const [room, setRoom] = useState(location.state?.room ?? null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
+
+  const shareLink = `${window.location.origin}/?join=${code}`;
 
   const myId = socket?.id;
   const isHost = room?.players?.[0]?.id === myId;
@@ -153,8 +156,61 @@ export default function Lobby() {
             </span>
           </button>
           <p style={{ fontSize: '0.78rem', color: 'var(--mid-grey)', marginTop: 6 }}>
-            Share this code with friends to join
+            Or share the link below — friends can join in one tap
           </p>
+
+          {/* Shareable link */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 14,
+              padding: '10px 14px',
+              background: 'var(--white)',
+              border: `2px solid ${linkCopied ? '#06D6A0' : 'var(--border)'}`,
+              borderRadius: 100,
+              transition: 'border-color 0.2s',
+            }}
+          >
+            <span
+              style={{
+                flex: 1,
+                fontSize: '0.78rem',
+                color: 'var(--dark-grey)',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {shareLink}
+            </span>
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(shareLink).then(() => {
+                  setLinkCopied(true);
+                  setTimeout(() => setLinkCopied(false), 2000);
+                });
+              }}
+              style={{
+                flexShrink: 0,
+                background: linkCopied ? '#06D6A0' : 'var(--black)',
+                color: '#fff',
+                border: 'none',
+                borderRadius: 100,
+                padding: '6px 14px',
+                fontSize: '0.68rem',
+                fontWeight: 700,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}
+            >
+              {linkCopied ? 'Copied!' : 'Copy Link'}
+            </button>
+          </div>
         </div>
       </div>
 

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
 
 const EMOJIS = [
@@ -44,12 +44,15 @@ const STEP_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F'];
 
 export default function Home() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { socket, connected } = useSocket();
 
-  const [tab, setTab] = useState('create');
+  // Pre-fill join tab if ?join=CODE is in the URL
+  const joinCodeFromUrl = searchParams.get('join')?.toUpperCase() ?? '';
+  const [tab, setTab] = useState(joinCodeFromUrl ? 'join' : 'create');
   const [name, setName] = useState('');
   const [emoji, setEmoji] = useState('');
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(joinCodeFromUrl);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [emojiOpen, setEmojiOpen] = useState(false);
@@ -57,7 +60,6 @@ export default function Home() {
   useEffect(() => {
     const saved = sessionStorage.getItem('coveted:name');
     if (saved) {
-      // If saved name starts with an emoji, split it out
       const first = [...saved][0];
       if (first && first.codePointAt(0) > 127) {
         setEmoji(first);
@@ -69,11 +71,12 @@ export default function Home() {
   }, []);
 
   function buildDisplayName() {
-    return emoji ? `${emoji} ${name.trim()}` : name.trim();
+    return `${emoji} ${name.trim()}`;
   }
 
   function handleCreate(e) {
     e.preventDefault();
+    if (!emoji) return setError('Pick an icon');
     if (!name.trim()) return setError('Enter your name');
     if (!connected) return setError('Connecting to server…');
     setError('');
@@ -90,6 +93,7 @@ export default function Home() {
 
   function handleJoin(e) {
     e.preventDefault();
+    if (!emoji) return setError('Pick an icon');
     if (!name.trim()) return setError('Enter your name');
     if (!code.trim()) return setError('Enter a room code');
     if (!connected) return setError('Connecting to server…');
@@ -184,21 +188,21 @@ export default function Home() {
 
         <form onSubmit={tab === 'create' ? handleCreate : handleJoin}>
 
-          {/* ── Emoji picker ── */}
+          {/* ── Icon + Name on one row ── */}
           <div style={{ marginBottom: 20 }}>
-            <label className="label">Your Icon</label>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {/* Current selection / toggle button */}
+            <label className="label" style={{ marginBottom: 8 }}>Icon &amp; Name</label>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+              {/* Emoji toggle */}
               <button
                 type="button"
                 onClick={() => setEmojiOpen((o) => !o)}
                 style={{
-                  width: 48,
-                  height: 48,
+                  width: 52,
+                  height: 52,
                   borderRadius: '50%',
-                  border: `2px solid ${emojiOpen ? 'var(--purple)' : 'var(--border)'}`,
+                  border: `2px solid ${emojiOpen ? 'var(--purple)' : error === 'Pick an icon' ? 'var(--coral)' : emoji ? 'var(--purple)' : 'var(--border)'}`,
                   background: 'var(--white)',
-                  fontSize: emoji ? '1.5rem' : '1rem',
+                  fontSize: emoji ? '1.6rem' : '1.1rem',
                   cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
@@ -210,26 +214,18 @@ export default function Home() {
               >
                 {emoji || '＋'}
               </button>
-              <span style={{ fontSize: '0.78rem', color: 'var(--mid-grey)' }}>
-                {emoji ? 'Tap to change' : 'Pick an icon (optional)'}
-              </span>
-              {emoji && (
-                <button
-                  type="button"
-                  onClick={() => setEmoji('')}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    fontSize: '0.72rem',
-                    color: 'var(--mid-grey)',
-                    cursor: 'pointer',
-                    padding: '2px 6px',
-                    borderRadius: 100,
-                  }}
-                >
-                  Remove
-                </button>
-              )}
+
+              {/* Name input */}
+              <input
+                id="player-name"
+                className="input"
+                type="text"
+                placeholder="Your name"
+                maxLength={20}
+                value={name}
+                onChange={(e) => { setName(e.target.value); setError(''); }}
+                style={{ flex: 1, height: 52 }}
+              />
             </div>
 
             {/* Emoji grid */}
@@ -250,7 +246,7 @@ export default function Home() {
                   <button
                     key={e}
                     type="button"
-                    onClick={() => { setEmoji(e); setEmojiOpen(false); }}
+                    onClick={() => { setEmoji(e); setEmojiOpen(false); setError(''); }}
                     style={{
                       background: emoji === e ? 'var(--light)' : 'transparent',
                       border: emoji === e ? '2px solid var(--purple)' : '2px solid transparent',
@@ -268,20 +264,6 @@ export default function Home() {
                 ))}
               </div>
             )}
-          </div>
-
-          {/* Name input */}
-          <div style={{ marginBottom: 20 }}>
-            <label className="label" htmlFor="player-name">Your Name</label>
-            <input
-              id="player-name"
-              className="input"
-              type="text"
-              placeholder="e.g. Margaux"
-              maxLength={20}
-              value={name}
-              onChange={(e) => { setName(e.target.value); setError(''); }}
-            />
           </div>
 
           {tab === 'join' && (
