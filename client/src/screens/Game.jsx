@@ -227,6 +227,7 @@ export default function Game() {
               totalVoters={nonBuyerCount}
               phaseStartTime={room.phaseStartTime}
               phaseDuration={room.phaseDuration}
+              myPlayedCardId={room.myPlayedCardId}
             />
           )}
 
@@ -428,7 +429,7 @@ function PickingPhase({ isBuyer, clue, buyer, buyerColor, hand, selectedCard, se
   );
 }
 
-function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, setVoteCard, submitted, onVote, votesCount, totalVoters, phaseStartTime, phaseDuration }) {
+function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, setVoteCard, submitted, onVote, votesCount, totalVoters, phaseStartTime, phaseDuration, myPlayedCardId }) {
   return (
     <div>
       <div style={{ marginBottom: 20 }}>
@@ -478,11 +479,27 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
             WebkitOverflowScrolling: 'touch',
             scrollbarWidth: 'none',
           }}>
-            {tableCards.map((t) => (
-              <div key={t.cardId} style={{ width: 'clamp(140px, 38vw, 175px)', flexShrink: 0, scrollSnapAlign: 'start' }}>
-                <Card card={t.card} fill selected={voteCard?.cardId === t.cardId} onClick={() => setVoteCard(t)} />
-              </div>
-            ))}
+            {tableCards.map((t) => {
+              const isOwn = t.cardId === myPlayedCardId;
+              return (
+                <div key={t.cardId} style={{ width: 'clamp(140px, 38vw, 175px)', flexShrink: 0, scrollSnapAlign: 'start', position: 'relative' }}>
+                  <div style={{ opacity: isOwn ? 0.45 : 1, pointerEvents: isOwn ? 'none' : 'auto' }}>
+                    <Card card={t.card} fill selected={voteCard?.cardId === t.cardId} onClick={() => !isOwn && setVoteCard(t)} />
+                  </div>
+                  {isOwn && (
+                    <div style={{
+                      position: 'absolute', bottom: 8, left: '50%', transform: 'translateX(-50%)',
+                      background: '#1a1a1a', color: '#fff',
+                      fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.06em',
+                      padding: '4px 10px', borderRadius: 100, whiteSpace: 'nowrap',
+                      pointerEvents: 'none',
+                    }}>
+                      It's your own card
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
           <button
             className="btn btn-coral"
@@ -574,7 +591,28 @@ function ResultsPhase({ room, myId, isHost, onNextRound }) {
       <p className="label" style={{ marginBottom: 14 }}>All Cards This Round</p>
       <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
         {room.tableCards?.map((t) => (
-          <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
+          <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)', position: 'relative' }}>
+            {t.isBuyer && (
+              <>
+                {/* golden glow ring */}
+                <div style={{
+                  position: 'absolute', inset: -3, borderRadius: 6,
+                  border: '2.5px solid #F5B800',
+                  boxShadow: '0 0 14px rgba(245,184,0,0.45)',
+                  zIndex: 1, pointerEvents: 'none',
+                }} />
+                {/* label badge */}
+                <div style={{
+                  position: 'absolute', top: -11, left: '50%', transform: 'translateX(-50%)',
+                  background: '#F5B800', color: '#1a1a1a',
+                  fontSize: '0.52rem', fontWeight: 800, letterSpacing: '0.08em',
+                  textTransform: 'uppercase', padding: '2px 8px', borderRadius: 100,
+                  zIndex: 2, whiteSpace: 'nowrap', pointerEvents: 'none',
+                }}>
+                  ★ Buyer's Card
+                </div>
+              </>
+            )}
             <Card card={t.card} fill votedBy={t.votedBy} />
           </div>
         ))}

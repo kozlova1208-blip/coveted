@@ -103,6 +103,9 @@ function sanitizeRoom(room, forPlayerId) {
     hand: room.hands[forPlayerId] ?? [],
     hasPlayed: room.table.some((t) => t.playerId === forPlayerId),
     hasVoted: !!room.votes[forPlayerId],
+    myPlayedCardId: room.status === 'voting'
+      ? (room.table.find((t) => t.playerId === forPlayerId)?.cardId ?? null)
+      : null,
     roundHistory: isEnd ? room.roundHistory : [],
     lastRoundHistory: isResults ? room.roundHistory[room.roundHistory.length - 1] ?? null : null,
     scoreDeltas: isResults ? room.lastScoreDeltas ?? {} : {},
