@@ -206,7 +206,7 @@ export default function Home() {
   }
 
   return (
-    <div style={{ background: '#EDE8DF', minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: '#EDE8DF', height: '100dvh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
 
       {/* ── Full-width title ───────────────────────────────────────────── */}
       <div style={{ textAlign: 'center', padding: 'clamp(20px,5vw,40px) 0 12px', position: 'relative' }}>
