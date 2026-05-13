@@ -399,9 +399,17 @@ function PickingPhase({ isBuyer, clue, buyer, buyerColor, hand, selectedCard, se
           <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 16 }}>
             Choose the one that best matches the clue.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 16, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
+          <div style={{
+            display: 'flex', flexWrap: 'nowrap', overflowX: 'auto',
+            gap: 8, marginBottom: 16,
+            marginLeft: -20, marginRight: -20,
+            paddingLeft: 20, paddingRight: 20,
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+          }}>
             {hand?.map((card) => (
-              <div key={card.id} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
+              <div key={card.id} style={{ width: 'clamp(140px, 38vw, 175px)', flexShrink: 0, scrollSnapAlign: 'start' }}>
                 <Card card={card} fill selected={selectedCard?.id === card.id} onClick={(c) => setSelectedCard(c)} />
               </div>
             ))}
@@ -434,9 +442,17 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
             Everyone is voting… you sit this one out.
           </p>
           <ProgressDots done={votesCount} total={totalVoters} />
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginTop: 20, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
+          <div style={{
+            display: 'flex', flexWrap: 'nowrap', overflowX: 'auto',
+            gap: 8, marginTop: 20,
+            marginLeft: -20, marginRight: -20,
+            paddingLeft: 20, paddingRight: 20,
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+          }}>
             {tableCards.map((t) => (
-              <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
+              <div key={t.cardId} style={{ width: 'clamp(140px, 38vw, 175px)', flexShrink: 0, scrollSnapAlign: 'start' }}>
                 <Card card={t.card} fill />
               </div>
             ))}
@@ -453,9 +469,17 @@ function VotingPhase({ isBuyer, clue, buyer, buyerColor, tableCards, voteCard, s
           <p style={{ fontSize: '0.82rem', color: 'var(--mid-grey)', marginBottom: 16 }}>
             Tap a card to select, then confirm your vote.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 8, marginBottom: 16, maxWidth: 940, marginLeft: 'auto', marginRight: 'auto' }}>
+          <div style={{
+            display: 'flex', flexWrap: 'nowrap', overflowX: 'auto',
+            gap: 8, marginBottom: 16,
+            marginLeft: -20, marginRight: -20,
+            paddingLeft: 20, paddingRight: 20,
+            scrollSnapType: 'x mandatory',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+          }}>
             {tableCards.map((t) => (
-              <div key={t.cardId} style={{ width: 'clamp(105px, 27vw, 150px)' }}>
+              <div key={t.cardId} style={{ width: 'clamp(140px, 38vw, 175px)', flexShrink: 0, scrollSnapAlign: 'start' }}>
                 <Card card={t.card} fill selected={voteCard?.cardId === t.cardId} onClick={() => setVoteCard(t)} />
               </div>
             ))}
