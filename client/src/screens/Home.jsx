@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useSocket } from '../hooks/useSocket';
 
+/* ─── Data ─────────────────────────────────────────────────────────────── */
 const EMOJIS = [
   '👑','💎','🌸','🦋','💐','🌺','✨','🎀',
   '💫','🌙','⭐','🦚','🌿','🍋','🫧','🪩',
@@ -9,78 +10,171 @@ const EMOJIS = [
   '🐚','🪸','🌊','🦜','🍄','🫐','🌻','🎪',
 ];
 
-/* ── Tiny inline flower SVG ─────────────────────────────────────────────── */
-function Flower({ x, y, size = 36, color = '#FF6B6B', centerColor = '#FFD166', rotate = 0, opacity = 0.82 }) {
+const LUXIT_COLORS = ['#E63329', '#F5B800', '#3B5BDB', '#FF6B35', '#E91E8C'];
+const STEP_COLORS  = ['#E63329', '#3B5BDB', '#F5B800', '#FF6B35'];
+
+/* ─── 4-pointed sparkle ─────────────────────────────────────────────────── */
+function Sparkle({ x, y, size = 14, color = '#F5B800' }) {
+  const t = size * 0.2;
+  const d = `M0,${-size} L${t},${-t} L${size},0 L${t},${t} L0,${size} L${-t},${t} L${-size},0 L${-t},${-t}Z`;
+  return <path d={d} fill={color} transform={`translate(${x},${y})`} />;
+}
+
+/* ─── Left figure: dark hair, pink top, red skirt ───────────────────────── */
+function FigureLeft() {
   return (
-    <g transform={`translate(${x},${y}) rotate(${rotate})`} opacity={opacity}>
-      {[0, 60, 120, 180, 240, 300].map((a) => (
-        <ellipse key={a} cx={0} cy={-size * 0.52} rx={size * 0.21} ry={size * 0.38} fill={color} transform={`rotate(${a})`} />
+    <svg viewBox="0 0 130 530" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ width: '100%', height: '100%' }}>
+      {/* Long braids behind */}
+      <rect x="48" y="32" width="8"  height="240" rx="4" fill="#2C1810" />
+      <rect x="59" y="32" width="8"  height="260" rx="4" fill="#3D2314" />
+
+      {/* Head */}
+      <ellipse cx="76" cy="38" rx="22" ry="26" fill="#F4C09A" />
+
+      {/* Hair top */}
+      <ellipse cx="76" cy="18" rx="24" ry="18" fill="#2C1810" />
+      <rect x="52" y="18" width="14" height="30" fill="#2C1810" />
+
+      {/* Eyes */}
+      <ellipse cx="68" cy="36" rx="3.5" ry="4"   fill="#1A0800" />
+      <ellipse cx="84" cy="36" rx="3.5" ry="4"   fill="#1A0800" />
+      <circle  cx="69.5" cy="34.5" r="1.4" fill="white" />
+      <circle  cx="85.5" cy="34.5" r="1.4" fill="white" />
+
+      {/* Smile */}
+      <path d="M66,46 Q76,53 86,46" stroke="#C07060" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Blush */}
+      <ellipse cx="57" cy="44" rx="8" ry="5" fill="#FFB0B0" opacity="0.4" />
+      <ellipse cx="95" cy="44" rx="8" ry="5" fill="#FFB0B0" opacity="0.4" />
+
+      {/* Neck */}
+      <rect x="69" y="62" width="14" height="15" fill="#F4C09A" />
+
+      {/* Pink sleeveless top */}
+      <path d="M44,77 L108,77 L108,130 L44,130 Z" fill="#F5A0C0" />
+      {/* Neckline V */}
+      <path d="M62,77 Q76,89 90,77" fill="#F5A0C0" />
+
+      {/* Red A-line skirt */}
+      <path d="M36,130 L116,130 L126,235 L26,235 Z" fill="#D93025" />
+
+      {/* Yellow bag right side */}
+      <rect x="112" y="142" width="16" height="14" rx="3" fill="#F5B800" />
+      <path d="M115,142 Q120,133 125,142" stroke="#C49000" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+      {/* Legs */}
+      <rect x="44" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
+      <rect x="78" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
+
+      {/* Heels */}
+      <rect x="34" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
+      <rect x="34" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
+      <rect x="68" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
+      <rect x="68" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
+    </svg>
+  );
+}
+
+/* ─── Right figure: blonde, sunglasses, striped top, blue skirt ─────────── */
+function FigureRight() {
+  return (
+    <svg viewBox="0 0 130 530" fill="none" xmlns="http://www.w3.org/2000/svg"
+      style={{ width: '100%', height: '100%' }}>
+      {/* Blonde side hair behind */}
+      <rect x="18" y="28" width="10" height="200" rx="5" fill="#D4A830" opacity="0.75" />
+      <rect x="100" y="28" width="10" height="215" rx="5" fill="#D4A830" opacity="0.75" />
+
+      {/* Head */}
+      <ellipse cx="64" cy="36" rx="22" ry="26" fill="#F4C09A" />
+
+      {/* Blonde hair top */}
+      <ellipse cx="64" cy="15" rx="25" ry="18" fill="#D4A830" />
+      <rect x="84" y="15" width="14" height="28" fill="#D4A830" />
+      <rect x="28" y="15" width="14" height="24" fill="#D4A830" />
+
+      {/* Sunglasses */}
+      <rect x="46" y="28" width="15" height="10" rx="5" fill="#111" />
+      <rect x="63" y="28" width="15" height="10" rx="5" fill="#111" />
+      <rect x="61" y="31" width="4"  height="2"  fill="#111" />
+      <rect x="41" y="32" width="7"  height="2"  fill="#111" />
+      <rect x="78" y="32" width="7"  height="2"  fill="#111" />
+
+      {/* Smile */}
+      <path d="M55,47 Q64,54 74,47" stroke="#C07060" strokeWidth="1.5" strokeLinecap="round" />
+      {/* Blush */}
+      <ellipse cx="46" cy="43" rx="8" ry="5" fill="#FFB0B0" opacity="0.35" />
+      <ellipse cx="82" cy="43" rx="8" ry="5" fill="#FFB0B0" opacity="0.35" />
+
+      {/* Neck */}
+      <rect x="57" y="60" width="14" height="15" fill="#F4C09A" />
+
+      {/* Striped top — white base + black stripes */}
+      <rect x="35" y="75" width="68" height="55" fill="white" />
+      {[0,1,2,3,4,5].map((i) => (
+        <rect key={i} x="35" y={75 + i * 9} width="68" height="4.5" fill="#111" />
       ))}
-      <circle cx={0} cy={0} r={size * 0.22} fill={centerColor} />
-    </g>
+
+      {/* Blue skirt */}
+      <path d="M27,130 L101,130 L110,235 L18,235 Z" fill="#3B5BDB" />
+
+      {/* Yellow bag left side */}
+      <rect x="4" y="142" width="16" height="14" rx="3" fill="#F5B800" />
+      <path d="M7,142 Q12,133 17,142" stroke="#C49000" strokeWidth="2" fill="none" strokeLinecap="round" />
+
+      {/* Left leg (with small dots — patterned tights) */}
+      <rect x="32" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
+      {[0,1,2,3,4,5,6,7,8,9].map((i) => (
+        <circle key={i} cx="41" cy={258 + i * 23} r="2.2" fill="#555" opacity="0.35" />
+      ))}
+
+      {/* Right leg */}
+      <rect x="66" y="235" width="18" height="253" rx="9" fill="#F4C09A" />
+
+      {/* Heels */}
+      <rect x="22" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
+      <rect x="22" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
+      <rect x="56" y="483" width="32" height="7"  rx="3" fill="#1A1A1A" />
+      <rect x="56" y="490" width="5"  height="16" rx="2.5" fill="#1A1A1A" />
+    </svg>
   );
 }
 
-function HeroFlowers() {
-  return (
-    <div className="flowers-bg">
-      <svg width="100%" height="100%" viewBox="0 0 420 360" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-        <Flower x={390} y={55}  size={52} color="#FF6B6B" centerColor="#FFD166" rotate={18} />
-        <Flower x={340} y={18}  size={28} color="#00C9C8" centerColor="#FF99C8" rotate={-12} opacity={0.65} />
-        <Flower x={18}  y={38}  size={44} color="#9B5DE5" centerColor="#FFD166" rotate={-25} />
-        <Flower x={52}  y={8}   size={22} color="#06D6A0" centerColor="#FF6B6B" rotate={10}  opacity={0.6} />
-        <Flower x={20}  y={320} size={48} color="#FF99C8" centerColor="#FFD166" rotate={5} />
-        <Flower x={65}  y={345} size={22} color="#F4845F" centerColor="#FFD166" rotate={-8}  opacity={0.65} />
-        <Flower x={400} y={330} size={46} color="#06D6A0" centerColor="#FFD166" rotate={-15} />
-        <Flower x={360} y={350} size={24} color="#9B5DE5" centerColor="#FF99C8" rotate={20}  opacity={0.6} />
-        <Flower x={8}   y={190} size={20} color="#FF6B6B" centerColor="#FFD166" rotate={30}  opacity={0.5} />
-        <Flower x={412} y={170} size={20} color="#00C9C8" centerColor="#FFD166" rotate={-30} opacity={0.5} />
-      </svg>
-    </div>
-  );
-}
-
-const STEP_COLORS = ['#FF6B6B', '#9B5DE5', '#00C9C8', '#F4845F'];
-
+/* ─── Main component ────────────────────────────────────────────────────── */
 export default function Home() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { socket, connected } = useSocket();
 
-  // Pre-fill join tab if ?join=CODE is in the URL
   const joinCodeFromUrl = searchParams.get('join')?.toUpperCase() ?? '';
-  const [tab, setTab] = useState(joinCodeFromUrl ? 'join' : 'create');
-  const [name, setName] = useState('');
-  const [emoji, setEmoji] = useState('');
-  const [code, setCode] = useState(joinCodeFromUrl);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [tab,       setTab]       = useState(joinCodeFromUrl ? 'join' : 'create');
+  const [name,      setName]      = useState('');
+  const [emoji,     setEmoji]     = useState('');
+  const [code,      setCode]      = useState(joinCodeFromUrl);
+  const [error,     setError]     = useState('');
+  const [loading,   setLoading]   = useState(false);
   const [emojiOpen, setEmojiOpen] = useState(false);
 
   useEffect(() => {
     const saved = sessionStorage.getItem('coveted:name');
-    if (saved) {
-      const first = [...saved][0];
-      if (first && first.codePointAt(0) > 127) {
-        setEmoji(first);
-        setName(saved.slice(first.length).trimStart());
-      } else {
-        setName(saved);
-      }
+    if (!saved) return;
+    const first = [...saved][0];
+    if (first && first.codePointAt(0) > 127) {
+      setEmoji(first);
+      setName(saved.slice(first.length).trimStart());
+    } else {
+      setName(saved);
     }
   }, []);
 
-  function buildDisplayName() {
-    return `${emoji} ${name.trim()}`;
-  }
+  function buildDisplayName() { return `${emoji} ${name.trim()}`; }
 
   function handleCreate(e) {
     e.preventDefault();
-    if (!emoji) return setError('Pick an icon');
-    if (!name.trim()) return setError('Enter your name');
-    if (!connected) return setError('Connecting to server…');
-    setError('');
-    setLoading(true);
+    if (!emoji)        return setError('Pick an icon');
+    if (!name.trim())  return setError('Enter your name');
+    if (!connected)    return setError('Connecting to server…');
+    setError(''); setLoading(true);
     const displayName = buildDisplayName();
     sessionStorage.setItem('coveted:name', displayName);
     socket.emit('create-room', { name: displayName }, (res) => {
@@ -93,12 +187,11 @@ export default function Home() {
 
   function handleJoin(e) {
     e.preventDefault();
-    if (!emoji) return setError('Pick an icon');
-    if (!name.trim()) return setError('Enter your name');
-    if (!code.trim()) return setError('Enter a room code');
-    if (!connected) return setError('Connecting to server…');
-    setError('');
-    setLoading(true);
+    if (!emoji)        return setError('Pick an icon');
+    if (!name.trim())  return setError('Enter your name');
+    if (!code.trim())  return setError('Enter a room code');
+    if (!connected)    return setError('Connecting to server…');
+    setError(''); setLoading(true);
     const displayName = buildDisplayName();
     sessionStorage.setItem('coveted:name', displayName);
     socket.emit('join-room', { code: code.trim().toUpperCase(), name: displayName }, (res) => {
@@ -110,235 +203,257 @@ export default function Home() {
   }
 
   return (
-    <div className="page" style={{ background: 'var(--cream)' }}>
+    <div className="page" style={{ background: '#EDE8DF' }}>
 
-      {/* ── Hero ── */}
-      <div
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          padding: '64px 20px 52px',
-          textAlign: 'center',
-          background: 'var(--cream)',
-          borderBottom: '2px solid var(--border)',
-        }}
-      >
-        <HeroFlowers />
-        <div style={{ position: 'relative', zIndex: 1 }}>
-          <div className="phase-badge" style={{ display: 'inline-flex', marginBottom: 20 }}>
-            <span className="phase-dot" />
-            A luxury fashion game
-          </div>
+      {/* ══ HERO ══════════════════════════════════════════════════════════ */}
+      <div style={{ position: 'relative', overflow: 'hidden', minHeight: '72vw', maxHeight: 560 }}>
+
+        {/* Sparkles SVG layer */}
+        <svg
+          style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', pointerEvents: 'none' }}
+          viewBox="0 0 400 480"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <Sparkle x={86}  y={82}  size={18} color="#F5B800" />
+          <Sparkle x={320} y={148} size={14} color="#E91E8C" />
+          <Sparkle x={36}  y={320} size={9}  color="#3B5BDB" />
+          <Sparkle x={370} y={360} size={18} color="#E91E8C" />
+          <circle  cx={40}  cy={390} r={7}   fill="#3B5BDB" />
+          <circle  cx={358} cy={220} r={5}   fill="#E63329" opacity="0.6" />
+        </svg>
+
+        {/* Rotated side labels */}
+        <span style={{
+          position: 'absolute', left: 0, top: '38%',
+          fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.22em',
+          textTransform: 'uppercase', color: '#9A9088',
+          writingMode: 'vertical-rl', transform: 'rotate(180deg)',
+          userSelect: 'none',
+        }}>
+          STYLE · PLAY · WIN
+        </span>
+        <span style={{
+          position: 'absolute', right: 0, top: '38%',
+          fontSize: '0.58rem', fontWeight: 700, letterSpacing: '0.22em',
+          textTransform: 'uppercase', color: '#9A9088',
+          writingMode: 'vertical-rl',
+          userSelect: 'none',
+        }}>
+          FASHION · GAME
+        </span>
+
+        {/* Left fashion figure */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: '2%',
+          width: 'clamp(90px, 18vw, 160px)',
+          height: 'clamp(360px, 72vw, 560px)',
+        }}>
+          <FigureLeft />
+        </div>
+
+        {/* Right fashion figure */}
+        <div style={{
+          position: 'absolute', bottom: 0, right: '2%',
+          width: 'clamp(90px, 18vw, 160px)',
+          height: 'clamp(360px, 72vw, 560px)',
+        }}>
+          <FigureRight />
+        </div>
+
+        {/* Centre title block */}
+        <div style={{ textAlign: 'center', paddingTop: 'clamp(32px, 7vw, 56px)', position: 'relative', zIndex: 1 }}>
+          {/* Colourful LUXIT letters */}
           <h1
+            aria-label="Luxit"
             style={{
-              fontFamily: 'var(--font-serif)',
-              fontSize: 'clamp(3rem, 10vw, 5.5rem)',
-              fontWeight: 400,
-              lineHeight: 1,
-              color: 'var(--black)',
-              marginBottom: 18,
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontSize: 'clamp(3.8rem, 18vw, 10rem)',
+              fontWeight: 900,
+              lineHeight: 0.9,
+              letterSpacing: '-0.02em',
+              margin: 0,
+              userSelect: 'none',
             }}
           >
-            Luxit
+            {'LUXIT'.split('').map((letter, i) => (
+              <span key={i} style={{ color: LUXIT_COLORS[i] }}>{letter}</span>
+            ))}
           </h1>
-          <p style={{ fontSize: '0.9rem', color: 'var(--dark-grey)', maxWidth: 300, margin: '0 auto', lineHeight: 1.65 }}>
-            Give a clue. Pick the card. Fool your friends.
-            <br />3–9 players.
+
+          {/* Tagline */}
+          <p style={{
+            marginTop: 14,
+            fontSize: 'clamp(0.58rem, 2vw, 0.72rem)',
+            fontWeight: 700,
+            letterSpacing: '0.22em',
+            textTransform: 'uppercase',
+            color: '#6B635A',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+          }}>
+            DRESS THE DAY
+            <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#E63329', display: 'inline-block', flexShrink: 0 }} />
+            STYLE THE NIGHT
           </p>
         </div>
       </div>
 
-      {/* ── Form ── */}
-      <div className="container" style={{ flex: 1, padding: '36px 20px' }}>
+      {/* ══ FORM ══════════════════════════════════════════════════════════ */}
+      <div style={{ background: 'white', borderTop: '2px solid #E8E0D6' }}>
+        <div className="container" style={{ padding: '32px 20px 48px' }}>
 
-        {/* Tab switcher */}
-        <div
-          style={{
-            display: 'flex',
-            gap: 8,
-            marginBottom: 28,
-            background: 'var(--light)',
-            borderRadius: 100,
-            padding: 4,
-          }}
-        >
-          {['create', 'join'].map((t) => (
-            <button
-              key={t}
-              onClick={() => { setTab(t); setError(''); }}
-              style={{
-                flex: 1,
-                padding: '10px',
-                fontSize: '0.72rem',
-                fontWeight: 600,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                background: tab === t ? 'var(--white)' : 'transparent',
-                border: 'none',
-                borderRadius: 100,
-                color: tab === t ? 'var(--black)' : 'var(--mid-grey)',
-                boxShadow: tab === t ? 'var(--shadow)' : 'none',
-                transition: 'all 0.18s',
-              }}
-            >
-              {t === 'create' ? 'New Room' : 'Join Room'}
-            </button>
-          ))}
-        </div>
-
-        <form onSubmit={tab === 'create' ? handleCreate : handleJoin}>
-
-          {/* ── Icon + Name on one row ── */}
-          <div style={{ marginBottom: 20 }}>
-            <label className="label" style={{ marginBottom: 8 }}>Icon &amp; Name</label>
-            <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-              {/* Emoji toggle */}
+          {/* Tab switcher */}
+          <div style={{ display: 'flex', gap: 8, marginBottom: 28, background: '#F5F0EA', borderRadius: 100, padding: 4 }}>
+            {['create', 'join'].map((t) => (
               <button
+                key={t}
                 type="button"
-                onClick={() => setEmojiOpen((o) => !o)}
+                onClick={() => { setTab(t); setError(''); }}
                 style={{
-                  width: 52,
-                  height: 52,
-                  borderRadius: '50%',
-                  border: `2px solid ${emojiOpen ? 'var(--purple)' : error === 'Pick an icon' ? 'var(--coral)' : emoji ? 'var(--purple)' : 'var(--border)'}`,
-                  background: 'var(--white)',
-                  fontSize: emoji ? '1.6rem' : '1.1rem',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexShrink: 0,
-                  transition: 'border-color 0.15s',
+                  flex: 1, padding: '10px',
+                  fontSize: '0.72rem', fontWeight: 700,
+                  letterSpacing: '0.1em', textTransform: 'uppercase',
+                  background: tab === t ? 'white' : 'transparent',
+                  border: 'none', borderRadius: 100,
+                  color: tab === t ? '#1a1a1a' : '#999',
+                  boxShadow: tab === t ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+                  transition: 'all 0.18s', cursor: 'pointer',
                 }}
-                aria-label="Choose an icon"
               >
-                {emoji || '＋'}
+                {t === 'create' ? 'New Room' : 'Join Room'}
               </button>
-
-              {/* Name input */}
-              <input
-                id="player-name"
-                className="input"
-                type="text"
-                placeholder="Your name"
-                maxLength={20}
-                value={name}
-                onChange={(e) => { setName(e.target.value); setError(''); }}
-                style={{ flex: 1, height: 52 }}
-              />
-            </div>
-
-            {/* Emoji grid */}
-            {emojiOpen && (
-              <div
-                style={{
-                  marginTop: 10,
-                  padding: 12,
-                  background: 'var(--white)',
-                  border: '2px solid var(--border)',
-                  borderRadius: 'var(--radius)',
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(8, 1fr)',
-                  gap: 4,
-                }}
-              >
-                {EMOJIS.map((e) => (
-                  <button
-                    key={e}
-                    type="button"
-                    onClick={() => { setEmoji(e); setEmojiOpen(false); setError(''); }}
-                    style={{
-                      background: emoji === e ? 'var(--light)' : 'transparent',
-                      border: emoji === e ? '2px solid var(--purple)' : '2px solid transparent',
-                      borderRadius: 8,
-                      fontSize: '1.4rem',
-                      padding: '4px',
-                      cursor: 'pointer',
-                      lineHeight: 1,
-                      transition: 'background 0.1s',
-                    }}
-                    aria-label={e}
-                  >
-                    {e}
-                  </button>
-                ))}
-              </div>
-            )}
+            ))}
           </div>
 
-          {tab === 'join' && (
+          <form onSubmit={tab === 'create' ? handleCreate : handleJoin}>
+
+            {/* Icon + Name on one row */}
             <div style={{ marginBottom: 20 }}>
-              <label className="label" htmlFor="room-code">Room Code</label>
-              <input
-                id="room-code"
-                className="input"
-                type="text"
-                placeholder="e.g. ABCD"
-                maxLength={4}
-                value={code}
-                onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
-                style={{ letterSpacing: '0.2em', fontWeight: 600, fontSize: '1.15rem', textAlign: 'center' }}
-              />
+              <label className="label" style={{ marginBottom: 8 }}>Icon &amp; Name</label>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                <button
+                  type="button"
+                  onClick={() => setEmojiOpen((o) => !o)}
+                  style={{
+                    width: 52, height: 52, borderRadius: '50%',
+                    border: `2px solid ${emojiOpen ? '#3B5BDB' : error === 'Pick an icon' ? '#E63329' : emoji ? '#3B5BDB' : '#E8E0D6'}`,
+                    background: 'white',
+                    fontSize: emoji ? '1.6rem' : '1.1rem',
+                    cursor: 'pointer',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, transition: 'border-color 0.15s',
+                  }}
+                  aria-label="Choose icon"
+                >
+                  {emoji || '＋'}
+                </button>
+                <input
+                  className="input"
+                  type="text"
+                  placeholder="Your name"
+                  maxLength={20}
+                  value={name}
+                  onChange={(e) => { setName(e.target.value); setError(''); }}
+                  style={{ flex: 1, height: 52 }}
+                />
+              </div>
+
+              {/* Emoji grid */}
+              {emojiOpen && (
+                <div style={{
+                  marginTop: 10, padding: 12,
+                  background: 'white', border: '2px solid #E8E0D6', borderRadius: 12,
+                  display: 'grid', gridTemplateColumns: 'repeat(8, 1fr)', gap: 4,
+                }}>
+                  {EMOJIS.map((e) => (
+                    <button
+                      key={e} type="button"
+                      onClick={() => { setEmoji(e); setEmojiOpen(false); setError(''); }}
+                      style={{
+                        background: emoji === e ? '#EEF0FF' : 'transparent',
+                        border: `2px solid ${emoji === e ? '#3B5BDB' : 'transparent'}`,
+                        borderRadius: 8, fontSize: '1.4rem', padding: '4px',
+                        cursor: 'pointer', lineHeight: 1, transition: 'background 0.1s',
+                      }}
+                    >
+                      {e}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
-          )}
 
-          {error && <p className="error-msg">{error}</p>}
+            {/* Room code (join only) */}
+            {tab === 'join' && (
+              <div style={{ marginBottom: 20 }}>
+                <label className="label" htmlFor="room-code">Room Code</label>
+                <input
+                  id="room-code" className="input" type="text"
+                  placeholder="e.g. ABCD" maxLength={4}
+                  value={code}
+                  onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(''); }}
+                  style={{ letterSpacing: '0.24em', fontWeight: 700, fontSize: '1.15rem', textAlign: 'center' }}
+                />
+              </div>
+            )}
 
-          <button
-            type="submit"
-            className="btn btn-coral"
-            disabled={loading || !connected}
-            style={{ width: '100%', marginTop: 24 }}
-          >
-            {loading
-              ? 'Please wait…'
-              : tab === 'create'
-              ? 'Create Room'
-              : 'Join Room'}
-          </button>
+            {error && <p className="error-msg">{error}</p>}
 
-          {!connected && (
-            <p style={{ textAlign: 'center', fontSize: '0.75rem', color: 'var(--mid-grey)', marginTop: 10 }}>
-              Connecting to server…
-            </p>
-          )}
-        </form>
+            <button
+              type="submit"
+              disabled={loading || !connected}
+              style={{
+                width: '100%', marginTop: 24,
+                padding: '15px',
+                fontSize: '0.8rem', fontWeight: 800,
+                letterSpacing: '0.1em', textTransform: 'uppercase',
+                border: 'none', borderRadius: 100,
+                background: tab === 'create' ? '#E63329' : '#3B5BDB',
+                color: 'white',
+                cursor: loading || !connected ? 'not-allowed' : 'pointer',
+                opacity: loading || !connected ? 0.45 : 1,
+                transition: 'transform 0.15s, box-shadow 0.15s',
+              }}
+              onMouseEnter={e => { if (!loading && connected) e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(0,0,0,0.18)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+            >
+              {loading ? 'Please wait…' : tab === 'create' ? 'Create Room' : 'Join Room'}
+            </button>
 
-        {/* How to play */}
-        <hr className="divider" style={{ margin: '36px 0 24px' }} />
-        <p className="label" style={{ marginBottom: 16 }}>How to play</p>
-        <ol style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {[
-            "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. The trick? Don't be too obvious — if everyone guesses your card, you score nothing. But don't be too cryptic either — if nobody guesses it, you score nothing too. Aim for that sweet spot.",
-            "Everyone else picks a card from their hand that best matches the clue. Choose wisely — you want your card to be close enough to the clue that other players mistake it for the Buyer's, and vote for yours instead.",
-            "Cards are revealed anonymously. Vote for the Buyer's card.",
-            "Score points for correct guesses — and for fooling others with your decoys.",
-          ].map((step, i) => (
-            <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-              <span
-                style={{
-                  flexShrink: 0,
-                  width: 22,
-                  height: 22,
-                  borderRadius: '50%',
-                  background: STEP_COLORS[i],
-                  color: '#fff',
-                  fontSize: '0.65rem',
-                  fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+            {!connected && (
+              <p style={{ textAlign: 'center', fontSize: '0.75rem', color: '#999', marginTop: 10 }}>
+                Connecting to server…
+              </p>
+            )}
+          </form>
+
+          {/* How to play */}
+          <hr style={{ border: 'none', borderTop: '2px dashed #E8E0D6', margin: '36px 0 24px' }} />
+          <p className="label" style={{ marginBottom: 16 }}>How to play</p>
+          <ol style={{ listStyle: 'none', padding: 0, display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {[
+              "One player is the Buyer. They see a luxury item and write a clue — a word, a vibe, or a phrase. The trick? Don't be too obvious — if everyone guesses your card, you score nothing. But don't be too cryptic either — if nobody guesses it, you score nothing too. Aim for that sweet spot.",
+              "Everyone else picks a card from their hand that best matches the clue. Choose wisely — you want your card to be close enough to the clue that other players mistake it for the Buyer's, and vote for yours instead.",
+              "Cards are revealed anonymously. Vote for the Buyer's card.",
+              "Score points for correct guesses — and for fooling others with your decoys.",
+            ].map((step, i) => (
+              <li key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+                <span style={{
+                  flexShrink: 0, width: 22, height: 22, borderRadius: '50%',
+                  background: STEP_COLORS[i], color: 'white',
+                  fontSize: '0.65rem', fontWeight: 800,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
                   marginTop: 2,
-                }}
-              >
-                {i + 1}
-              </span>
-              <span style={{ fontSize: '0.83rem', color: 'var(--dark-grey)', lineHeight: 1.55 }}>
-                {step}
-              </span>
-            </li>
-          ))}
-        </ol>
+                }}>
+                  {i + 1}
+                </span>
+                <span style={{ fontSize: '0.83rem', color: '#555', lineHeight: 1.55 }}>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </div>
   );
